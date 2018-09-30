@@ -21,14 +21,15 @@ namespace OctoprintClient
         private static int LastSyncPos { get; set; }
         private Thread syncthread;
         private bool threadstop;
+        private bool threadrunning;
         private System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
         public OctoprintPosTracker(OctoprintConnection con):base(con)
         {
             BufferPos = new float[] { 0, 0, 0, 0 };
             MaxFeedRateBuffer = new float[] { 200, 200, 12 };
             MovesBuffer = new List<float[]>();
-            syncthread = new Thread(new ThreadStart(AutoSync));
-            syncthread.Start();
+            //syncthread = new Thread(new ThreadStart(AutoSync));
+            //syncthread.Start();
         }
         ~OctoprintPosTracker(){
 
@@ -41,10 +42,16 @@ namespace OctoprintClient
             {
 
             }
+            threadrunning = false;
             watch.Stop();
         }
         public float[] GetPosAsync()
         {
+            if (!threadrunning)
+            {
+                GetCurrentPosSync();
+                StartThread();
+            }
             float[] PosResult = { 0, 0, 0 };
             long millisecondsPassed = watch.ElapsedMilliseconds;
             float secondsPassed = (float)millisecondsPassed / (float)1000.0;
@@ -59,7 +66,9 @@ namespace OctoprintClient
                     float factor = 0;
                     if (Math.Abs(MovesBuffer[i + 1][3]) < 0.1)
                         factor = secondsPassed / (MovesBuffer[i + 1][3]);
-                    PosResult = new float[] { MovesBuffer[i][0] + (MovesBuffer[i + 1][0] - MovesBuffer[i][0]) * factor, MovesBuffer[i][1] + (MovesBuffer[i + 1][1] - MovesBuffer[i][1]) * factor, MovesBuffer[i][2] + (MovesBuffer[i + 1][2] - MovesBuffer[i][2]) * factor };
+                    PosResult = new float[] { MovesBuffer[i][0] + (MovesBuffer[i + 1][0] - MovesBuffer[i][0]) * factor,
+                        MovesBuffer[i][1] + (MovesBuffer[i + 1][1] - MovesBuffer[i][1]) * factor,
+                        MovesBuffer[i][2] + (MovesBuffer[i + 1][2] - MovesBuffer[i][2]) * factor };
                     //Console.WriteLine(movesBuffer[i][0]+"/"+movesBuffer[i][1]+"/"+movesBuffer[i][2]);
                     //Console.WriteLine(PosResult[0]+"/"+PosResult[1]+"/"+PosResult[2]);
                     break;
@@ -75,13 +84,23 @@ namespace OctoprintClient
             float[] coordinateResponseValue = { 0, 0, 0 };
             string jobInfo = connection.MakeRequest("api/job");
             JObject data = JsonConvert.DeserializeObject<JObject>(jobInfo);
+            JToken progressdata = data.Value<JToken>("progress");
             if (GCodeString == null)
             {
                 //Console.WriteLine(data["progress"]["filepos"]);
                 try
                 {
-                    string filelocation = data["job"]["file"]["origin"] + "/" + data["job"]["file"]["name"];
-                    GetGCode(filelocation, (int)data["progress"]["filepos"]);
+                    JToken jobdata = data.Value<JToken>("job");
+                    if(jobdata != null)
+                    {
+                        JToken filedata = jobdata.Value<JToken>("file");
+                        if (filedata != null)
+                        {
+                            string filelocation = filedata.Value<String>("origin") + "/" + filedata.Values<String>("name");
+                            if(progressdata!=null)
+                                GetGCode(filelocation, progressdata.Value<int?>("filepos")??-1);
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
@@ -92,24 +111,28 @@ namespace OctoprintClient
                     return coordinateResponseValue;
                 }
             }
-            string[] linesLeft = GCodeString.Substring((int)data["progress"]["filepos"]).Split(new[] { '\r', '\n' });
-            if (GcodePos != (int)data["progress"]["filepos"])
+            if (progressdata != null)
             {
-                if (GCodeString.Length > (int)data["progress"]["filepos"])
+
+                string[] linesLeft = GCodeString.Substring(progressdata.Value<int?>("filepos")??-1).Split(new[] { '\r', '\n' });
+                if (GcodePos != (progressdata.Value<int?>("filepos") ?? -1))
                 {
-                    string currline = linesLeft[0];
-                    ReadLineForwards(currline);
+                    if (GCodeString.Length > (progressdata.Value<int?>("filepos") ?? -1))
+                    {
+                        string currline = linesLeft[0];
+                        ReadLineForwards(currline);
+                    }
+                    GcodePos = progressdata.Value<int?>("filepos") ?? -1;
+
+
                 }
-                GcodePos = (int)data["progress"]["filepos"];
-
-
-            }
-            if (MovesBuffer.Count == 0)
-            {
-                BufferPos = new float[] { Xpos, Ypos, Zpos };
-                for (int i = 0; i < linesLeft.Length; i++)
+                if (MovesBuffer.Count == 0)
                 {
-                    ReadLineToBuffer(linesLeft[i]);
+                    BufferPos = new float[] { Xpos, Ypos, Zpos };
+                    for (int i = 0; i < linesLeft.Length; i++)
+                    {
+                        ReadLineToBuffer(linesLeft[i]);
+                    }
                 }
             }
             else
@@ -246,8 +269,9 @@ namespace OctoprintClient
         {
             string JobStatusString = connection.MakeRequest("api/job");
             JObject JobStatus = JsonConvert.DeserializeObject<JObject>(JobStatusString);
+            JToken progressdata = JobStatus.Value<JToken>("progress");
 
-            int bitspassed = ((int)JobStatus["progress"]["filepos"] - 1) - LastSyncPos;
+            int bitspassed = ((progressdata.Value<int?>("filepos")??-1) - 1) - LastSyncPos;
             string[] linesPassed = { };
             if (bitspassed > 0 && GCodeString != null && GCodeString.Length > LastSyncPos + bitspassed)
                 linesPassed = GCodeString.Substring(LastSyncPos, bitspassed).Split(new[] { '\r', '\n' });
@@ -269,7 +293,7 @@ namespace OctoprintClient
             if (count > 1 && MovesBuffer.Count >= count)
             {
                 MovesBuffer.RemoveRange(0, count);
-                LastSyncPos = (int)JobStatus["progress"]["filepos"];
+                LastSyncPos = progressdata.Value<int?>("filepos") ?? -1;
                 //Console.WriteLine("10 seconds passed in: "+secondspassed+" seconds and the next move is this long: "+movesBuffer[0][3]);
                 //movesBuffer.RemoveAt(0);
             }
@@ -286,7 +310,16 @@ namespace OctoprintClient
             else return false;
         }
 
+        public void StartThread()
+        {
+            if (!threadrunning)
+            {
+                threadrunning = true;
+                syncthread = new Thread(new ThreadStart(AutoSync));
+                syncthread.Start();
 
+            }
+        }
         private void Sync()
         {
             Syncpos();

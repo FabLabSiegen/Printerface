@@ -13,7 +13,12 @@ namespace OctoprintClient
         {
             string jobInfo = connection.MakeRequest("api/job");
             JObject data = JsonConvert.DeserializeObject<JObject>(jobInfo);
-            OctoprintJobProgress result = new OctoprintJobProgress { Completion = (double)data["progress"]["completion"], Filepos = (int)data["progress"]["filepos"], PrintTime = (int)data["progress"]["printTime"], PrintTimeLeft = (int)data["progress"]["printTimeLeft"] };
+            OctoprintJobProgress result = new OctoprintJobProgress();
+            JToken progress = data.Value<JToken>("progress");
+            result.Completion = progress.Value<double?>("completion") ?? -1.0;
+            result.Filepos = progress.Value<int?>("filepos") ?? -1;
+            result.PrintTime = progress.Value<int?>("printTime") ?? -1;
+            result.PrintTimeLeft = progress.Value<int?>("printTimeLeft")??-1;
             return result;
         }
     }

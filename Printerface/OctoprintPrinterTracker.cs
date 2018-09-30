@@ -13,44 +13,50 @@ namespace OctoprintClient
         {
             string jobInfo = connection.MakeRequest("api/printer");
             JObject data = JsonConvert.DeserializeObject<JObject>(jobInfo);
+            JToken temperaturedata = data.Value<JToken>("temperature");
+            JToken bedtemperature = temperaturedata.Value<JToken>("bed");
+            JToken statedata = data.Value<JToken>("state");
+            JToken stateflags = statedata.Value<JToken>("flags");
             OctoprintFullPrinterState result = new OctoprintFullPrinterState()
             {
                 TempState = new OctoprintTemperatureState()
                 {
                     Bed = new OctoprintTemperature()
                     {
-                        Actual = (double)data["temperature"]["bed"]["actual"],
-                        Target = (double)data["temperature"]["bed"]["target"],
-                        Offset = (double)data["temperature"]["bed"]["offset"]
+                        Actual = bedtemperature.Value<double?>("actual") ?? -1.0,
+                        Target = bedtemperature.Value<double?>("target") ?? -1.0,
+                        Offset = bedtemperature.Value<double?>("offset") ?? -1.0
 
                     }
                 },
-                SDState = (bool)data["sd"]["ready"],
+                SDState = data.Value<JToken>("sd").Value<bool?>("ready") ?? false,
                 PrinterState = new OctoprintPrinterState()
                 {
-                    Text = (string)data["state"]["text"],
+                    Text = statedata.Value<String>("text"),
                     Flags = new OctoprintPrinterFlags()
                     {
-                        Operational = (bool)data["state"]["flags"]["operational"],
-                        Paused = (bool)data["state"]["flags"]["paused"],
-                        Printing = (bool)data["state"]["flags"]["printing"],
-                        Cancelling = (bool)data["state"]["flags"]["cancelling"],
-                        SDReady = (bool)data["state"]["flags"]["sdReady"],
-                        Error = (bool)data["state"]["flags"]["error"],
-                        Ready = (bool)data["state"]["flags"]["ready"],
-                        ClosedOrError = (bool)data["state"]["flags"]["closedOrError"]
+                        Operational = stateflags.Value<bool?>("operational")??false,
+                        Paused = stateflags.Value<bool?>("paused") ?? false,
+                        Printing = stateflags.Value<bool?>("printing") ?? false,
+                        Cancelling = stateflags.Value<bool?>("canceling") ?? false,
+                        SDReady = stateflags.Value<bool?>("sdReady") ?? false,
+                        Error = stateflags.Value<bool?>("error") ?? false,
+                        Ready = stateflags.Value<bool?>("ready") ?? false,
+                        ClosedOrError = stateflags.Value<bool?>("closedOrError") ?? false
                     }
                 }
             };
+            result.TempState.Tools = new List<OctoprintTemperature>();
             for (int i = 0; i < 256; i++)
             {
-                if (data["temperature"]["tool" + i] != null)
+                JToken tooltemp = temperaturedata.Value<JToken>("tool"+i);
+                if (tooltemp != null)
                 {
                     result.TempState.Tools.Add(new OctoprintTemperature()
                     {
-                        Actual = (double)data["temperature"]["tool" + i]["actual"],
-                        Target = (double)data["temperature"]["tool" + i]["target"],
-                        Offset = (double)data["temperature"]["tool" + i]["offset"]
+                        Actual = tooltemp.Value<double?>("actual")??-1.0,
+                        Target = tooltemp.Value<double?>("target") ?? -1.0,
+                        Offset = tooltemp.Value<double?>("offset") ?? -1.0
                     });
                 }
                 else
@@ -58,37 +64,43 @@ namespace OctoprintClient
                     break;
                 }
             }
-            foreach (JObject historydata in data["temperature"]["history"])
+            if (temperaturedata != null && temperaturedata.Value<JToken>("history")!=null)
             {
-
-                OctoprintHistoricTemperatureState historicTempState = new OctoprintHistoricTemperatureState()
+                result.TempState.History = new List<OctoprintHistoricTemperatureState>();
+                foreach (JObject historydata in temperaturedata["history"])
                 {
-                    Time = (int)historydata["time"],
-                    Bed = new OctoprintTemperature()
-                    {
-                        Actual = (double)historydata["bed"]["actual"],
-                        Target = (double)historydata["bed"]["target"],
-                        Offset = (double)historydata["bed"]["offset"]
-                    }
-                };
 
-                for (int i = 0; i < 256; i++)
-                {
-                    if (data["temperature"]["tool" + i] != null)
+                    OctoprintHistoricTemperatureState historicTempState = new OctoprintHistoricTemperatureState()
                     {
-                        historicTempState.Tools.Add(new OctoprintTemperature()
+                        Time = historydata.Value<int?>("time") ?? -1,
+                        Bed = new OctoprintTemperature()
                         {
-                            Actual = (double)historydata["tool" + i]["actual"],
-                            Target = (double)historydata["tool" + i]["target"],
-                            Offset = (double)historydata["tool" + i]["offset"]
-                        });
-                    }
-                    else
+                            Actual = historydata.Value<JToken>("bed").Value<double?>("actual") ?? -1.0,
+                            Target = historydata.Value<JToken>("bed").Value<double?>("target") ?? -1.0,
+                            Offset = historydata.Value<JToken>("bed").Value<double?>("offset") ?? -1.0
+                        }
+                    };
+
+                    historicTempState.Tools = new List<OctoprintTemperature>();
+                    for (int i = 0; i < 256; i++)
                     {
-                        break;
+                        JToken tooltemp = historydata.Value<JToken>("tool" + i);
+                        if (tooltemp != null)
+                        {
+                            historicTempState.Tools.Add(new OctoprintTemperature()
+                            {
+                                Actual = tooltemp.Value<double?>("actual") ?? -1.0,
+                                Target = tooltemp.Value<double?>("target") ?? -1.0,
+                                Offset = tooltemp.Value<double?>("offset") ?? -1.0
+                            });
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
+                    result.TempState.History.Add(historicTempState);
                 }
-                result.TempState.History.Add(historicTempState);
             }
             return result;
         }
@@ -96,19 +108,21 @@ namespace OctoprintClient
         {
             string jobInfo = connection.MakeRequest("api/printer?exclude=temperature,sd");
             JObject data = JsonConvert.DeserializeObject<JObject>(jobInfo);
+            JToken statedata = data.Value<JToken>("state");
+            JToken stateflags = statedata.Value<JToken>("flags");
             OctoprintPrinterState result = new OctoprintPrinterState()
             {
-                Text = (string)data["state"]["text"],
+                Text = statedata.Value<String>("text"),
                 Flags = new OctoprintPrinterFlags()
                 {
-                    Operational = (bool)data["state"]["flags"]["operational"],
-                    Paused = (bool)data["state"]["flags"]["paused"],
-                    Printing = (bool)data["state"]["flags"]["printing"],
-                    Cancelling = (bool)data["state"]["flags"]["cancelling"],
-                    SDReady = (bool)data["state"]["flags"]["sdReady"],
-                    Error = (bool)data["state"]["flags"]["error"],
-                    Ready = (bool)data["state"]["flags"]["ready"],
-                    ClosedOrError = (bool)data["state"]["flags"]["closedOrError"]
+                    Operational = stateflags.Value<bool?>("operational") ?? false,
+                    Paused = stateflags.Value<bool?>("paused") ?? false,
+                    Printing = stateflags.Value<bool?>("printing") ?? false,
+                    Cancelling = stateflags.Value<bool?>("canceling") ?? false,
+                    SDReady = stateflags.Value<bool?>("sdReady") ?? false,
+                    Error = stateflags.Value<bool?>("error") ?? false,
+                    Ready = stateflags.Value<bool?>("ready") ?? false,
+                    ClosedOrError = stateflags.Value<bool?>("closedOrError") ?? false
                 }
             };
             return result;

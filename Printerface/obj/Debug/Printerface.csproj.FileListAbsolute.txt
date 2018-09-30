@@ -1,0 +1,9 @@
+/home/gerrit/Printerface/Printerface/bin/Debug/Printerface.dll
+/home/gerrit/Printerface/Printerface/bin/Debug/Printerface.pdb
+/home/gerrit/Printerface/Printerface/bin/Debug/Newtonsoft.Json.dll
+/home/gerrit/Printerface/Printerface/bin/Debug/Newtonsoft.Json.xml
+/home/gerrit/Printerface/Printerface/obj/Debug/Printerface.csprojAssemblyReference.cache
+/home/gerrit/Printerface/Printerface/obj/Debug/Printerface.csproj.CoreCompileInputs.cache
+/home/gerrit/Printerface/Printerface/obj/Debug/Printerface.csproj.CopyComplete
+/home/gerrit/Printerface/Printerface/obj/Debug/Printerface.dll
+/home/gerrit/Printerface/Printerface/obj/Debug/Printerface.pdb

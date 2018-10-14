@@ -14,7 +14,7 @@ namespace OctoprintClient
             OctoprintFolder rootfolder = new OctoprintFolder() { Name = "root", Path = "/", Type = "root" };
             rootfolder.octoprintFolders = new List<OctoprintFolder>();
             rootfolder.octoprintFiles = new List<OctoprintFile>();
-            string jobInfo = connection.MakeRequest("api/files");
+            string jobInfo = Connection.Get("api/files");
             JObject data = JsonConvert.DeserializeObject<JObject>(jobInfo);
             foreach (JObject filedata in data["files"])
             {
@@ -71,7 +71,7 @@ namespace OctoprintClient
         }
         public OctoprintFolder GetFiles(string path)
         {
-            string jobInfo = connection.MakeRequest("api/files" + path);
+            string jobInfo = Connection.Get("api/files" + path);
             JObject data = JsonConvert.DeserializeObject<JObject>(jobInfo);
             OctoprintFolder folder = new OctoprintFolder() { Name = data.Value<String>("name")??"", Path = data.Value<String>("path")??"", Type = "folder" };
             folder.octoprintFolders = new List<OctoprintFolder>();
@@ -129,6 +129,62 @@ namespace OctoprintClient
                 }
             }
             return folder;
+        }
+        public string Select(string location, string path, bool? print)
+        {
+            JObject data = new JObject
+            {
+                { "command", "select" }
+            };
+            if (print != null)
+            {
+                data.Add("print", print);
+            }
+            return Connection.PostJson("api/files/"+location+"/"+path, data);
+        }
+        public string Slice(string location, string path, bool? select, string gcode, float posx, float posy, string profile, Dictionary<string,string> profileparam, bool? print)
+        {
+            JObject data = new JObject
+            {
+                { "command", "slice" },
+                { "slicer", "prusa"},
+                { "position", new JObject{ {"x",posx },{"y",posy } } }
+
+            };
+            if (select != null)
+            {
+                data.Add("select", select);
+            }
+            if (profileparam.Count>0)
+            {
+                data.Add(JObject.FromObject(profileparam));
+            }
+            if (profile != "")
+            {
+                data.Add("profile", profile);
+            }
+            if (gcode != "")
+            {
+                data.Add("gcode", gcode);
+            }
+            if (print != null)
+            {
+                data.Add("print", print);
+            }
+            return Connection.PostJson("api/files/" + location + "/" + path, data);
+        }
+        public string Copy(string location, string path, string destination)
+        {
+            JObject data = new JObject
+            {
+                { "command", "copy" },
+                { "destination", destination}
+            };
+            return Connection.PostJson("api/files/" + location + "/" + path, data);
+        }
+        public string Delete(string location, string path)
+        {
+            return Connection.Delete("api/files/" + location + "/" + path);
         }
     }
 

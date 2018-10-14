@@ -36,7 +36,9 @@ namespace OctoprintClient
             threadstop = true;
             try
             {
-                syncthread.Join();
+                if (syncthread != null){
+                    syncthread.Join();
+                }
             }
             catch (ThreadStateException)
             {
@@ -82,7 +84,7 @@ namespace OctoprintClient
         public float[] GetCurrentPosSync()
         {
             float[] coordinateResponseValue = { 0, 0, 0 };
-            string jobInfo = connection.MakeRequest("api/job");
+            string jobInfo = Connection.Get("api/job");
             JObject data = JsonConvert.DeserializeObject<JObject>(jobInfo);
             JToken progressdata = data.Value<JToken>("progress");
             if (GCodeString == null)
@@ -144,13 +146,44 @@ namespace OctoprintClient
             coordinateResponseValue[2] = Zpos;
             return coordinateResponseValue;
         }
+        public void SetPos(float? x, float? y, float? z)
+        {
+            if (x.HasValue)
+            {
+                Xpos = (float)x;
+            }
+            if (y.HasValue)
+            {
+                Ypos = (float)y;
+            }
+            if (z.HasValue)
+            {
+                Zpos = (float)z;
+            }
+        }
+        public void Move(float? x, float? y, float? z)
+        {
+
+            if (x.HasValue)
+            {
+                Xpos += (float)x;
+            }
+            if (y.HasValue)
+            {
+                Ypos += (float)y;
+            }
+            if (z.HasValue)
+            {
+                Zpos += (float)z;
+            }
+        }
         private void GetGCode(string location, int pos)
         {
             using (var wc = new System.Net.WebClient())
             {
                 try
                 {
-                    GCodeString = wc.DownloadString(connection.EndPoint + "downloads/files/" + location + "?apikey=" + connection.ApiKey);
+                    GCodeString = wc.DownloadString(Connection.EndPoint + "downloads/files/" + location + "?apikey=" + Connection.ApiKey);
                 }
                 catch (Exception e)
                 {
@@ -267,7 +300,7 @@ namespace OctoprintClient
         }
         public void Syncpos()
         {
-            string JobStatusString = connection.MakeRequest("api/job");
+            string JobStatusString = Connection.Get("api/job");
             JObject JobStatus = JsonConvert.DeserializeObject<JObject>(JobStatusString);
             JToken progressdata = JobStatus.Value<JToken>("progress");
 

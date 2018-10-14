@@ -11,7 +11,7 @@ namespace OctoprintClient
         }
         public OctoprintFullPrinterState GetFullPrinterState()
         {
-            string jobInfo = connection.MakeRequest("api/printer");
+            string jobInfo = Connection.Get("api/printer");
             JObject data = JsonConvert.DeserializeObject<JObject>(jobInfo);
             JToken temperaturedata = data.Value<JToken>("temperature");
             JToken bedtemperature = temperaturedata.Value<JToken>("bed");
@@ -106,7 +106,7 @@ namespace OctoprintClient
         }
         public OctoprintPrinterState GetPrinterState()
         {
-            string jobInfo = connection.MakeRequest("api/printer?exclude=temperature,sd");
+            string jobInfo = Connection.Get("api/printer?exclude=temperature,sd");
             JObject data = JsonConvert.DeserializeObject<JObject>(jobInfo);
             JToken statedata = data.Value<JToken>("state");
             JToken stateflags = statedata.Value<JToken>("flags");
@@ -129,6 +129,171 @@ namespace OctoprintClient
 
         }
 
+        public string MakePrintheadJog(float? x, float? y, float? z, bool? absolute, int? speed)
+        {
+
+            string returnValue = string.Empty;
+            JObject data = new JObject
+            {
+                { "command", "jog" }
+            };
+            if (x.HasValue)
+            {
+                data.Add("x", x);
+            }
+            if (y.HasValue)
+            {
+                data.Add("y", y);
+            }
+            if (y.HasValue)
+            {
+                data.Add("z", z);
+            }
+            if (absolute.HasValue)
+            {
+                data.Add("absolute", absolute);
+            }
+            if (speed.HasValue)
+            {
+                data.Add("speed", speed);
+            }
+            if (!absolute.HasValue || absolute == true)
+            {
+                Connection.Position.SetPos(x, y, z);
+            }
+            else Connection.Position.Move(x, y, z);
+            returnValue = Connection.PostJson("api/printer/printhead", data);
+            return returnValue;
+        }
+
+        public string MakePrintheadHome(string[] axes)
+        {
+            float? x=null, y=null, z=null;
+            JArray jaxes = new JArray();
+            foreach (string axis in axes)
+            {
+                jaxes.Add(axis);
+                if (axis == "x")
+                    x = 0;
+                if (axis == "y")
+                    y = 0;
+                if (axis == "z")
+                    z = 0;
+            }
+            string returnValue = string.Empty;
+            JObject data = new JObject
+            {
+                { "command", "home" },
+                { "axes", jaxes}
+            };
+            returnValue =Connection.PostJson("api/printer/printhead", data);
+            Connection.Position.SetPos(x, y, z);
+            return returnValue;
+        }
+        public string SetFeedrate(int? ifeed,float? ffeed)
+        {
+            JObject data = new JObject
+            {
+                {"command", "feedrate"}
+            };
+            if (ffeed.HasValue)
+            {
+                data.Add("factor", ffeed);
+            }
+            else if (ifeed.HasValue)
+            {
+                data.Add("factor", ifeed);
+            }
+            else
+            {
+                data.Add("factor", 100);
+            }
+            return Connection.PostJson("api/printer/printhead", data);
+        }
+
+        public string SetTemperatureTarget(Dictionary<string, int> targets)
+        {
+            string returnValue = string.Empty;
+            JObject data = new JObject
+            {
+                { "command", "target" },
+                { "targets", JObject.FromObject(targets)}
+            };
+            returnValue =Connection.PostJson("api/printer/tool", data);
+            return returnValue;
+        }
+
+        public string SetTemperatureOffset(Dictionary<string, int> offsets)
+        {
+            string returnValue = string.Empty;
+            JObject data = new JObject
+            {
+                { "command", "offset" },
+                { "offsets", JObject.FromObject(offsets)}
+            };
+            returnValue =Connection.PostJson("api/printer/tool", data);
+            return returnValue;
+        }
+
+        public string SelectTool(string tool)
+        {
+            JObject data = new JObject
+            {
+                { "command", "select" },
+                { "tool", tool}
+            };
+            return Connection.PostJson("api/printer/tool", data);
+        }
+
+        public string ExtrudeSelectedTool(int mm)
+        {
+            JObject data = new JObject
+            {
+                { "command", "extrude" },
+                { "amount", mm}
+            };
+            return Connection.PostJson("api/printer/tool", data);
+        }
+
+        public string SetFlowrateSelectedTool(int? iflow,float? fflow)
+        {
+            JObject data = new JObject
+            {
+                {"command", "flowrate"}
+            };
+            if (fflow.HasValue)
+            {
+                data.Add("factor", fflow);
+            }
+            else if (iflow.HasValue)
+            {
+                data.Add("factor", iflow);
+            }
+            else
+            {
+                data.Add("factor", 100);
+            }
+            return Connection.PostJson("api/printer/tool", data);
+        }
+        public string SetTemperatureTargetBed(int temperature)
+        {
+            JObject data = new JObject
+            {
+                { "command", "target" },
+                { "target", temperature}
+            };
+            return Connection.PostJson("api/printer/bed", data);
+        }
+
+        public string SetTemperatureOffsetBed(int offset)
+        {
+            JObject data = new JObject
+            {
+                { "command", "offset" },
+                { "offset", offset}
+            };
+            return Connection.PostJson("api/printer/bed", data);
+        }
     }
 
     public class OctoprintPrinterFlags

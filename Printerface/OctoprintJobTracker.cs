@@ -11,7 +11,7 @@ namespace OctoprintClient
         }
         public OctoprintJobProgress GetProgress()
         {
-            string jobInfo = connection.MakeRequest("api/job");
+            string jobInfo = Connection.Get("api/job");
             JObject data = JsonConvert.DeserializeObject<JObject>(jobInfo);
             OctoprintJobProgress result = new OctoprintJobProgress();
             JToken progress = data.Value<JToken>("progress");
@@ -20,6 +20,44 @@ namespace OctoprintClient
             result.PrintTime = progress.Value<int?>("printTime") ?? -1;
             result.PrintTimeLeft = progress.Value<int?>("printTimeLeft")??-1;
             return result;
+        }
+        private string Post(string command, string action)
+        { 
+            string returnValue = string.Empty;
+            JObject data = new JObject
+            {
+                { "command", command }
+            };
+            if (action != "")
+            {
+                data.Add("action",action);
+            }
+            returnValue =Connection.PostJson("api/job", data);
+            return returnValue;
+        }
+        public string StartJob()
+        {
+            return Post("start", "");
+        }
+        public string CancelJob()
+        {
+            return Post("cancel", "");
+        }
+        public string RestartJob()
+        {
+            return Post("restart", "");
+        }
+        public string PauseJob()
+        {
+            return Post("pause", "pause");
+        }
+        public string ResumeJob()
+        {
+            return Post("pause", "resume");
+        }
+        public string ToggleJob()
+        {
+            return Post("pause", "toggle");
         }
     }
     public class OctoprintJobProgress

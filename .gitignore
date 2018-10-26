@@ -2,7 +2,9 @@
 .vs/
 build/
 [Bb]in
+Printerface/[Bb]in
 [Dd]ebug*/
+Printerface/obj
 obj/
 [Rr]elease*/
 _ReSharper*/

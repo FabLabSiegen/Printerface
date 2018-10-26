@@ -23,17 +23,17 @@ namespace OctoprintClient
                     OctoprintFolder folder = GetFiles((string)filedata["path"]);
                     rootfolder.octoprintFolders.Add(folder);
                 }
-                if ((string)filedata["type"] == "machinecode")
+                else
                 {
                     OctoprintFile file = new OctoprintFile
                     {
                         Name = filedata.Value<String>("name") ?? "",
                         Path = filedata.Value<String>("path") ?? "",
-                        Type = "machinecode",
+                        Type = filedata.Value<String>("type") ?? "file",
                         Hash = filedata.Value<String>("hash") ?? "",
                         Size = filedata.Value<int?>("size") ?? -1,
                         Date = filedata.Value<int?>("date") ?? -1,
-                        Origin = filedata.Value<String>("string") ?? ""
+                        Origin = filedata.Value<String>("origin") ?? ""
                     };
                     JToken refs = filedata.Value<JToken>("refs");
                     if (refs != null)
@@ -85,17 +85,17 @@ namespace OctoprintClient
                     folder.octoprintFolders.Add(subfolder);
                 }
 
-                if ((string)filedata["type"] == "machinecode")
+                else
                 {
                     OctoprintFile file = new OctoprintFile
                     {
                         Name = filedata.Value<String>("name") ?? "",
                         Path = filedata.Value<String>("path") ?? "",
-                        Type = "machinecode",
+                        Type = filedata.Value<String>("type") ?? "",
                         Hash = filedata.Value<String>("hash") ?? "",
                         Size = filedata.Value<int?>("size") ?? -1,
                         Date = filedata.Value<int?>("date") ?? -1,
-                        Origin = filedata.Value<String>("string") ?? ""
+                        Origin = filedata.Value<String>("origin") ?? ""
                     };
                     JToken refs = filedata.Value<JToken>("refs");
                     if (refs != null)
@@ -142,12 +142,12 @@ namespace OctoprintClient
             }
             return Connection.PostJson("api/files/"+location+"/"+path, data);
         }
-        public string Slice(string location, string path, bool? select, string gcode, float posx, float posy, string profile, Dictionary<string,string> profileparam, bool? print)
+        public string Slice(string location, string path, bool? select, string gcode, int posx, int posy, string slicer, string profile, Dictionary<string,string> profileparam, bool? print)
         {
             JObject data = new JObject
             {
                 { "command", "slice" },
-                { "slicer", "prusa"},
+                { "slicer", slicer},
                 { "position", new JObject{ {"x",posx },{"y",posy } } }
 
             };
@@ -193,7 +193,7 @@ namespace OctoprintClient
         public string Name { get; set; }
         public string Path { get; set; }
         public string Type { get; set; }
-        public string[] TypePath { get; set; }
+        //public string[] TypePath { get; set; }
         public string Hash { get; set; }
         public int Size { get; set; }
         public int Date { get; set; }
@@ -207,14 +207,33 @@ namespace OctoprintClient
         public int Print_success { get; set; }
         public int Print_last_date { get; set; }
         public bool Print_last_success { get; set; }
+        public override string ToString()
+        {
+            string returnvalue = "";
+            returnvalue += Name + ", path: " +Origin+"/"+ Path + " ("+ Type + ") :\n";
+            return returnvalue;
+        }
     }
     public class OctoprintFolder
     {
         public string Name { get; set; }
         public string Path { get; set; }
         public string Type { get; set; }
-        public string[] TypePath { get; set; }
+        //public string[] TypePath { get; set; }
         public List<OctoprintFile> octoprintFiles;
         public List<OctoprintFolder> octoprintFolders;
+        public override string ToString()
+        {
+            string returnvalue = "";
+            returnvalue += Name + ": " + Path + " ("+ Type + ") :\n";
+            foreach (OctoprintFile file in octoprintFiles){
+                returnvalue+="  " + file.ToString()+"\n";
+            }
+            foreach (OctoprintFolder folder in octoprintFolders)
+            {
+                returnvalue += "    " + folder.ToString().Replace("\n", "\n ");
+            }
+            return returnvalue;
+        }
     }
 }

@@ -343,6 +343,20 @@ namespace OctoprintClient
             else return false;
         }
 
+        public string Home(string[] axes)
+        {
+            return Connection.Printers.MakePrintheadHome(axes);
+        }
+        public string Home()
+        {
+            return Home(new string[]{"x","y","z" });
+        }
+
+        public string MoveTo(float? x,float? y, float? z, bool? absolute, int? speed)
+        {
+            return Connection.Printers.MakePrintheadJog(x, y, z, absolute, speed);
+        }
+
         public void StartThread()
         {
             if (!threadrunning)

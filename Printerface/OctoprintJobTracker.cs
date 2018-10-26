@@ -66,5 +66,12 @@ namespace OctoprintClient
         public int Filepos { get; set; }
         public int PrintTime { get; set; }
         public int PrintTimeLeft { get; set; }
+        public override string ToString()
+        {
+            if (Filepos != -1)
+                return "Completion: " + Completion + "\nFilepos: " + Filepos + "\nPrintTime: " + PrintTime + "\nPrintTimeLeft: " + PrintTimeLeft + "\n";
+            else
+                return "No Job found running";
+        }
     }
 }

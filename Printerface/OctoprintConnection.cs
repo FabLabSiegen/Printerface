@@ -45,12 +45,15 @@ namespace OctoprintClient
             Console.WriteLine(EndPoint + location + "?apikey=" + ApiKey);
             WebClient wc = new WebClient();
             wc.Headers.Add("X-Api-Key", ApiKey);
-            using (Stream downStream = wc.OpenRead(EndPoint + location))
+            try 
             {
+                Stream downStream = wc.OpenRead(EndPoint + location);
                 using (StreamReader sr = new StreamReader(downStream))
                 {
                     strResponseValue = sr.ReadToEnd();
                 }
+            } catch (WebException e){
+                return ""+e.Message;
             }
             return strResponseValue;
         }
@@ -82,7 +85,15 @@ namespace OctoprintClient
             {
                 streamWriter.Write(argumentString);
             }
-            var httpResponse = (HttpWebResponse)request.GetResponse();
+            HttpWebResponse httpResponse;
+            try
+            {
+                httpResponse = (HttpWebResponse)request.GetResponse();
+            }
+            catch (WebException e)
+            {
+                return "" + e.Message;
+            }
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
                 var result = streamReader.ReadToEnd();
@@ -97,8 +108,16 @@ namespace OctoprintClient
             Console.WriteLine(EndPoint + location + "?apikey=" + ApiKey);
             HttpWebRequest request = WebRequest.CreateHttp(EndPoint + location);// + "?apikey=" + apiKey);
             request.Method = "DELETE";
-            request.Headers["X-Api-Key"]=ApiKey; 
-            var httpResponse = (HttpWebResponse)request.GetResponse();
+            request.Headers["X-Api-Key"]=ApiKey;
+            HttpWebResponse httpResponse;
+            try
+            {
+                httpResponse = (HttpWebResponse)request.GetResponse();
+            }
+            catch (WebException e)
+            {
+                return "" + e.Message;
+            }
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
                 var result = streamReader.ReadToEnd();

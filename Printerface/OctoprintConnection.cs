@@ -45,15 +45,10 @@ namespace OctoprintClient
             Console.WriteLine(EndPoint + location + "?apikey=" + ApiKey);
             WebClient wc = new WebClient();
             wc.Headers.Add("X-Api-Key", ApiKey);
-            try 
+            Stream downStream = wc.OpenRead(EndPoint + location);
+            using (StreamReader sr = new StreamReader(downStream))
             {
-                Stream downStream = wc.OpenRead(EndPoint + location);
-                using (StreamReader sr = new StreamReader(downStream))
-                {
-                    strResponseValue = sr.ReadToEnd();
-                }
-            } catch (WebException e){
-                return ""+e.Message;
+                strResponseValue = sr.ReadToEnd();
             }
             return strResponseValue;
         }
@@ -86,14 +81,8 @@ namespace OctoprintClient
                 streamWriter.Write(argumentString);
             }
             HttpWebResponse httpResponse;
-            try
-            {
-                httpResponse = (HttpWebResponse)request.GetResponse();
-            }
-            catch (WebException e)
-            {
-                return "" + e.Message;
-            }
+            httpResponse = (HttpWebResponse)request.GetResponse();
+
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
                 var result = streamReader.ReadToEnd();
@@ -110,14 +99,7 @@ namespace OctoprintClient
             request.Method = "DELETE";
             request.Headers["X-Api-Key"]=ApiKey;
             HttpWebResponse httpResponse;
-            try
-            {
-                httpResponse = (HttpWebResponse)request.GetResponse();
-            }
-            catch (WebException e)
-            {
-                return "" + e.Message;
-            }
+            httpResponse = (HttpWebResponse)request.GetResponse();
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
                 var result = streamReader.ReadToEnd();

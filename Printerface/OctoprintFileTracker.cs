@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 namespace OctoprintClient
@@ -71,7 +72,20 @@ namespace OctoprintClient
         }
         public OctoprintFolder GetFiles(string path)
         {
-            string jobInfo = Connection.Get("api/files" + path);
+            string jobInfo="";
+            try
+            {
+                jobInfo = Connection.Get("api/files" + path);
+            }
+            catch (WebException e)
+            {
+                switch (((HttpWebResponse)e.Response).StatusCode)
+                {
+                    case HttpStatusCode.NotFound:
+                        Console.WriteLine("searched for a file that wasn't there at " + path);
+                        return null;
+                }
+            }
             JObject data = JsonConvert.DeserializeObject<JObject>(jobInfo);
             OctoprintFolder folder = new OctoprintFolder() { Name = data.Value<String>("name")??"", Path = data.Value<String>("path")??"", Type = "folder" };
             folder.octoprintFolders = new List<OctoprintFolder>();
@@ -140,7 +154,22 @@ namespace OctoprintClient
             {
                 data.Add("print", print);
             }
-            return Connection.PostJson("api/files/"+location+"/"+path, data);
+
+            try
+            {
+                return Connection.PostJson("api/files/" + location + "/" + path, data);
+            }
+            catch (WebException e)
+            {
+                switch (((HttpWebResponse)e.Response).StatusCode)
+                {
+                    case HttpStatusCode.Conflict:
+                        return "409 The Printer is propably not operational";
+                    default:
+                        return "unknown webexception occured";
+                }
+
+            }
         }
         public string Slice(string location, string path, bool? select, string gcode, int posx, int posy, string slicer, string profile, Dictionary<string,string> profileparam, bool? print)
         {
@@ -171,7 +200,28 @@ namespace OctoprintClient
             {
                 data.Add("print", print);
             }
-            return Connection.PostJson("api/files/" + location + "/" + path, data);
+            try {
+                return Connection.PostJson("api/files/" + location + "/" + path, data);
+            }
+            catch (WebException e)
+            {
+                switch (((HttpWebResponse)e.Response).StatusCode)
+                {
+                    case (HttpStatusCode.UnsupportedMediaType):
+                        return "415 that file you are trying to slice seems to be no stl";
+                    case HttpStatusCode.NotFound:
+                        return "404 did not find the file";
+                    case HttpStatusCode.BadRequest:
+                        return "400 command is not supported in this way";
+                    case HttpStatusCode.Conflict:
+                        return "409 conflict occured, cannot slice while printing or printer is not operational or something else";
+                    default:
+                        return "unknown webexception occured";
+                }
+                   
+            }
+
+
         }
         public string Copy(string location, string path, string destination)
         {
@@ -180,11 +230,44 @@ namespace OctoprintClient
                 { "command", "copy" },
                 { "destination", destination}
             };
-            return Connection.PostJson("api/files/" + location + "/" + path, data);
+            try
+            {
+                return Connection.PostJson("api/files/" + location + "/" + path, data);
+            }
+            catch (WebException e)
+            {
+                switch (((HttpWebResponse)e.Response).StatusCode)
+                {
+                    case HttpStatusCode.Conflict:
+                        return "409 cannot overwrite that destination, there is allready a file named similarly there";
+                    case HttpStatusCode.NotFound:
+                        return "404 did not find destination folder or file to copy";
+                    default:
+                        return "unknown webexception occured";
+                }
+
+            }
         }
         public string Delete(string location, string path)
         {
-            return Connection.Delete("api/files/" + location + "/" + path);
+            try {
+                return Connection.Delete("api/files/" + location + "/" + path);
+            }
+            catch (WebException e)
+            {
+                switch (((HttpWebResponse)e.Response).StatusCode)
+                {
+                    case HttpStatusCode.Conflict:
+                        return "409 The file is currently in use by a Slicer or a Printer";
+                    case HttpStatusCode.NotFound:
+                        return "404 did not find the file";
+                    default:
+                        return "unknown webexception occured";
+                }
+
+            }
+
+
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 namespace OctoprintClient
@@ -11,24 +12,22 @@ namespace OctoprintClient
         }
         public OctoprintFullPrinterState GetFullPrinterState()
         {
-            string jobInfo = Connection.Get("api/printer");
-            JObject data=new JObject();
-            try
+            string jobInfo = "";
+            try {
+                jobInfo = Connection.Get("api/printer");
+            } catch (WebException e)
             {
-                data = JsonConvert.DeserializeObject<JObject>(jobInfo);
-            }catch
-            {
-                if (jobInfo.Contains("409"))
-                {
+                if (((HttpWebResponse)e.Response).StatusCode == HttpStatusCode.Conflict) { 
                     OctoprintFullPrinterState returnval = new OctoprintFullPrinterState
-                    {
-                        PrinterState = new OctoprintPrinterState()
-                    };
+                        {
+                            PrinterState = new OctoprintPrinterState()
+                        };
                     returnval.PrinterState.Text = "Error 409 is the Printer Connected at all?\n";
                     return returnval;
                 }
-
             }
+            JObject data=new JObject();
+            data = JsonConvert.DeserializeObject<JObject>(jobInfo);
             JToken temperaturedata = data.Value<JToken>("temperature");
             JToken bedtemperature = temperaturedata.Value<JToken>("bed");
             JToken statedata = data.Value<JToken>("state");
@@ -123,15 +122,14 @@ namespace OctoprintClient
         }
         public OctoprintPrinterState GetPrinterState()
         {
-            string jobInfo = Connection.Get("api/printer?exclude=temperature,sd");
-            JObject data = new JObject();
+            string jobInfo="";
             try
             {
-                data = JsonConvert.DeserializeObject<JObject>(jobInfo);
+                jobInfo = Connection.Get("api/printer?exclude=temperature,sd");
             }
-            catch
+            catch (WebException e)
             {
-                if (jobInfo.Contains("409"))
+                if (((HttpWebResponse)e.Response).StatusCode == HttpStatusCode.Conflict)
                 {
                     OctoprintPrinterState returnval = new OctoprintPrinterState
                     {
@@ -139,8 +137,9 @@ namespace OctoprintClient
                     };
                     return returnval;
                 }
-
             }
+            JObject data = new JObject();
+            data = JsonConvert.DeserializeObject<JObject>(jobInfo);
             JToken statedata = data.Value<JToken>("state");
             JToken stateflags = statedata.Value<JToken>("flags");
             OctoprintPrinterState result = new OctoprintPrinterState()
@@ -195,7 +194,21 @@ namespace OctoprintClient
                 Connection.Position.SetPos(x, y, z);
             }
             else Connection.Position.Move(x, y, z);
-            returnValue = Connection.PostJson("api/printer/printhead", data);
+            try
+            {
+                returnValue = Connection.PostJson("api/printer/printhead", data);
+            }
+            catch (WebException e)
+            {
+                switch (((HttpWebResponse)e.Response).StatusCode)
+                {
+                    case HttpStatusCode.Conflict:
+                        return "409 The Printer is not operational";
+                    default:
+                        return "unknown webexception occured";
+                }
+
+            }
             return returnValue;
         }
 
@@ -219,29 +232,70 @@ namespace OctoprintClient
                 { "command", "home" },
                 { "axes", jaxes}
             };
-            returnValue =Connection.PostJson("api/printer/printhead", data);
+            try { 
+                returnValue =Connection.PostJson("api/printer/printhead", data);
+            }
+            catch (WebException e)
+            {
+                switch (((HttpWebResponse)e.Response).StatusCode)
+                {
+                    case HttpStatusCode.Conflict:
+                        return "409 The Printer is not operational";
+                    case HttpStatusCode.BadRequest:
+                        return "wrong axis defined, choose only x and/or y and/or z";
+                    default:
+                        return "unknown webexception occured";
+                }
+
+            }
             Connection.Position.SetPos(x, y, z);
             return returnValue;
         }
-        public string SetFeedrate(int? ifeed,float? ffeed)
+        public string SetFeedrate(int feed)
         {
             JObject data = new JObject
             {
-                {"command", "feedrate"}
+                {"command", "feedrate"},
+                {"factor", feed}
             };
-            if (ffeed.HasValue)
+            try
             {
-                data.Add("factor", ffeed);
+                return Connection.PostJson("api/printer/printhead", data);
             }
-            else if (ifeed.HasValue)
+            catch (WebException e)
             {
-                data.Add("factor", ifeed);
+                switch (((HttpWebResponse)e.Response).StatusCode)
+                {
+                    case HttpStatusCode.Conflict:
+                        return "409 The Printer is not operational";
+                    default:
+                        return "unknown webexception occured";
+                }
+
             }
-            else
+        }
+        public string SetFeedrate(float feed)
+        {
+            JObject data = new JObject
             {
-                data.Add("factor", 100);
+                {"command", "feedrate"},
+                {"factor", feed}
+            };
+            try
+            {
+                return Connection.PostJson("api/printer/printhead", data);
             }
-            return Connection.PostJson("api/printer/printhead", data);
+            catch (WebException e)
+            {
+                switch (((HttpWebResponse)e.Response).StatusCode)
+                {
+                    case HttpStatusCode.Conflict:
+                        return "409 The Printer is not operational";
+                    default:
+                        return "unknown webexception occured";
+                }
+
+            }
         }
 
         public string SetTemperatureTarget(Dictionary<string, int> targets)
@@ -252,8 +306,24 @@ namespace OctoprintClient
                 { "command", "target" },
                 { "targets", JObject.FromObject(targets)}
             };
-            returnValue =Connection.PostJson("api/printer/tool", data);
-            return returnValue;
+
+            try
+            {
+                return Connection.PostJson("api/printer/tool", data);
+            }
+            catch (WebException e)
+            {
+                switch (((HttpWebResponse)e.Response).StatusCode)
+                {
+                    case HttpStatusCode.Conflict:
+                        return "409 The Printer is propably not operational";
+                    case HttpStatusCode.BadRequest:
+                        return "400 The values given seem to not be acceptable, is the tool named like tool{n}?";
+                    default:
+                        return "unknown webexception occured";
+                }
+
+            }
         }
 
         public string SetTemperatureOffset(Dictionary<string, int> offsets)
@@ -264,8 +334,23 @@ namespace OctoprintClient
                 { "command", "offset" },
                 { "offsets", JObject.FromObject(offsets)}
             };
-            returnValue =Connection.PostJson("api/printer/tool", data);
-            return returnValue;
+            try
+            {
+                return Connection.PostJson("api/printer/tool", data);
+            }
+            catch (WebException e)
+            {
+                switch (((HttpWebResponse)e.Response).StatusCode)
+                {
+                    case HttpStatusCode.Conflict:
+                        return "409 The Printer is propably not operational";
+                    case HttpStatusCode.BadRequest:
+                        return "400 The values given seem to not be acceptable, is the tool named like tool{n}?";
+                    default:
+                        return "unknown webexception occured";
+                }
+
+            }
         }
 
         public string SelectTool(string tool)
@@ -275,7 +360,23 @@ namespace OctoprintClient
                 { "command", "select" },
                 { "tool", tool}
             };
-            return Connection.PostJson("api/printer/tool", data);
+            try
+            {
+                return Connection.PostJson("api/printer/tool", data);
+            }
+            catch (WebException e)
+            {
+                switch (((HttpWebResponse)e.Response).StatusCode)
+                {
+                    case HttpStatusCode.Conflict:
+                        return "409 The Printer is propably not operational or currently printing";
+                    case HttpStatusCode.BadRequest:
+                        return "400 The values given seem to not be acceptable, is the tool named like tool{n}?";
+                    default:
+                        return "unknown webexception occured";
+                }
+
+            }
         }
 
         public string ExtrudeSelectedTool(int mm)
@@ -285,28 +386,74 @@ namespace OctoprintClient
                 { "command", "extrude" },
                 { "amount", mm}
             };
-            return Connection.PostJson("api/printer/tool", data);
+            try
+            {
+                return Connection.PostJson("api/printer/tool", data);
+            }
+            catch (WebException e)
+            {
+                switch (((HttpWebResponse)e.Response).StatusCode)
+                {
+                    case HttpStatusCode.Conflict:
+                        return "409 The Printer is propably not operational or currently printing";
+                    case HttpStatusCode.BadRequest:
+                        return "400 The values given seem to not be acceptable";
+                    default:
+                        return "unknown webexception occured";
+                }
+
+            }
         }
 
-        public string SetFlowrateSelectedTool(int? iflow,float? fflow)
+        public string SetFlowrateSelectedTool(int flow)
         {
             JObject data = new JObject
             {
-                {"command", "flowrate"}
+                {"command", "flowrate"},
+                {"factor", flow}
             };
-            if (fflow.HasValue)
+            try
             {
-                data.Add("factor", fflow);
+                return Connection.PostJson("api/printer/tool", data);
             }
-            else if (iflow.HasValue)
+            catch (WebException e)
             {
-                data.Add("factor", iflow);
+                switch (((HttpWebResponse)e.Response).StatusCode)
+                {
+                    case HttpStatusCode.Conflict:
+                        return "409 The Printer is propably not operational";
+                    case HttpStatusCode.BadRequest:
+                        return "400 The values given seem to not be acceptable";
+                    default:
+                        return "unknown webexception occured";
+                }
+
             }
-            else
+        }
+        public string SetFlowrateSelectedTool(float flow)
+        {
+            JObject data = new JObject
             {
-                data.Add("factor", 100);
+                {"command", "flowrate"},
+                {"factor", flow}
+            };
+            try
+            {
+                return Connection.PostJson("api/printer/tool", data);
             }
-            return Connection.PostJson("api/printer/tool", data);
+            catch (WebException e)
+            {
+                switch (((HttpWebResponse)e.Response).StatusCode)
+                {
+                    case HttpStatusCode.Conflict:
+                        return "409 The Printer is propably not operational";
+                    case HttpStatusCode.BadRequest:
+                        return "400 The values given seem to not be acceptable";
+                    default:
+                        return "unknown webexception occured";
+                }
+
+            }
         }
         public string SetTemperatureTargetBed(int temperature)
         {
@@ -315,7 +462,23 @@ namespace OctoprintClient
                 { "command", "target" },
                 { "target", temperature}
             };
-            return Connection.PostJson("api/printer/bed", data);
+            try
+            {
+                return Connection.PostJson("api/printer/bed", data);
+            }
+            catch (WebException e)
+            {
+                switch (((HttpWebResponse)e.Response).StatusCode)
+                {
+                    case HttpStatusCode.Conflict:
+                        return "409 The Printer is propably not operational or has no heated bed";
+                    case HttpStatusCode.BadRequest:
+                        return "400 The values given seem to not be acceptable";
+                    default:
+                        return "unknown webexception occured";
+                }
+
+            }
         }
 
         public string SetTemperatureOffsetBed(int offset)
@@ -325,7 +488,23 @@ namespace OctoprintClient
                 { "command", "offset" },
                 { "offset", offset}
             };
-            return Connection.PostJson("api/printer/bed", data);
+            try
+            {
+                return Connection.PostJson("api/printer/bed", data);
+            }
+            catch (WebException e)
+            {
+                switch (((HttpWebResponse)e.Response).StatusCode)
+                {
+                    case HttpStatusCode.Conflict:
+                        return "409 The Printer is propably not operational or has no heated bed";
+                    case HttpStatusCode.BadRequest:
+                        return "400 The values given seem to not be acceptable";
+                    default:
+                        return "unknown webexception occured";
+                }
+
+            }
         }
     }
 

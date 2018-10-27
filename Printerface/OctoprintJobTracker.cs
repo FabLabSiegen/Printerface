@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 namespace OctoprintClient
@@ -32,7 +33,22 @@ namespace OctoprintClient
             {
                 data.Add("action",action);
             }
-            returnValue =Connection.PostJson("api/job", data);
+            try
+            {
+                returnValue =Connection.PostJson("api/job", data);
+            }
+            catch (WebException e)
+            {
+                switch (((HttpWebResponse)e.Response).StatusCode)
+                {
+                    case HttpStatusCode.Conflict:
+                        return "409 Current jobstate is incompatible with this type of interaction";
+
+                    default:
+                        return "unknown webexception occured";
+                }
+
+            }
             return returnValue;
         }
         public string StartJob()

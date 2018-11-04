@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -82,7 +83,7 @@ namespace OctoprintClient
                 switch (((HttpWebResponse)e.Response).StatusCode)
                 {
                     case HttpStatusCode.NotFound:
-                        Console.WriteLine("searched for a file that wasn't there at " + path);
+                        Debug.WriteLine("searched for a file that wasn't there at " + path);
                         return null;
                 }
             }
@@ -144,7 +145,7 @@ namespace OctoprintClient
             }
             return folder;
         }
-        public string Select(string location, string path, bool? print)
+        public string Select( string path, string location="local", bool? print=null)
         {
             JObject data = new JObject
             {
@@ -171,7 +172,7 @@ namespace OctoprintClient
 
             }
         }
-        public string Slice(string location, string path, bool? select, string gcode, int posx, int posy, string slicer, string profile, Dictionary<string,string> profileparam, bool? print)
+        public string Slice(string location, string path, bool? select=null, string gcode="", int posx=100, int posy=100, string slicer="", string profile="", Dictionary<string,string> profileparam=null, bool? print=null)
         {
             JObject data = new JObject
             {
@@ -184,7 +185,7 @@ namespace OctoprintClient
             {
                 data.Add("select", select);
             }
-            if (profileparam.Count>0)
+            if (profileparam!=null && profileparam.Count>0)
             {
                 data.Add(JObject.FromObject(profileparam));
             }
@@ -269,6 +270,49 @@ namespace OctoprintClient
 
 
         }
+        public string CreateFolder(string path)
+        {
+            string foldername = path.Split('/')[path.Split('/').Length - 1];
+            path = path.Substring(0, path.Length - foldername.Length);
+            string packagestring="" +
+                "--{0}\r\n" +
+                "Content-Disposition: form-data; name=\"foldername\";\r\n" +
+                "\r\n" +
+                foldername + "\r\n" +
+                "--{0}--\r\n" +
+                "Content-Disposition: form-data; name=\"path\"\r\n" +
+                "\r\n" +
+                path + "\r\n" +
+                "--{0}--\r\n";
+            return Connection.PostMultipart(packagestring, "/api/files/local");
+        }
+        public string UploadFile(string filename,  string path="", string location="local", bool select=false, bool print=false)
+        {
+            string fileData =string.Empty;
+            fileData= System.IO.File.ReadAllText(filename);
+
+            string packagestring="" +
+                "--{0}\r\n" +
+                "Content-Disposition: form-data; name=\"file\"; filename=\""+filename+"\"\r\n" +
+                "Content-Type: application/octet-stream\r\n" +
+                "\r\n" +
+                fileData + "\r\n" +
+                
+                "--{0}\r\n" +
+                "Content-Disposition: form-data; name=\"path\";\r\n" +
+                "\r\n" +
+                path + "\r\n" +
+                "--{0}--\r\n" +
+                "Content-Disposition: form-data; name=\"select\";\r\n" +
+                "\r\n" +
+                select + "\r\n" +
+                "--{0}--\r\n" +
+                "Content-Disposition: form-data; name=\"print\"\r\n" +
+                "\r\n" +
+                print + "\r\n" +
+                "--{0}--\r\n";
+            return Connection.PostMultipart(packagestring, "api/files/"+location);
+        }
     }
 
     public class OctoprintFile
@@ -314,7 +358,8 @@ namespace OctoprintClient
             }
             foreach (OctoprintFolder folder in octoprintFolders)
             {
-                returnvalue += "    " + folder.ToString().Replace("\n", "\n ");
+                if(folder!=null)
+                    returnvalue += "    " + folder.ToString().Replace("\n", "\n ");
             }
             return returnvalue;
         }

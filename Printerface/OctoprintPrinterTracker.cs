@@ -325,6 +325,10 @@ namespace OctoprintClient
 
             }
         }
+        public string SetTemperatureTarget(int temp)
+        {
+            return SetTemperatureTarget(new Dictionary<string, int>(){ {"tool0",temp} });
+        }
 
         public string SetTemperatureOffset(Dictionary<string, int> offsets)
         {
@@ -352,7 +356,10 @@ namespace OctoprintClient
 
             }
         }
-
+        public string SetTemperatureOffset(int temp)
+        {
+            return SetTemperatureOffset(new Dictionary<string, int>() { { "tool0", temp } });
+        }
         public string SelectTool(string tool)
         {
             JObject data = new JObject

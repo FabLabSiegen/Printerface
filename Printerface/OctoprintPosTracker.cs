@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Threading;
+using System.Diagnostics;
+
 namespace OctoprintClient
 {
     public class OctoprintPosTracker:OctoprintTracker
@@ -107,8 +109,8 @@ namespace OctoprintClient
                 catch (Exception e)
                 {
 
-                    Console.WriteLine("Printer is currently not active");
-                    Console.WriteLine(e.Message);
+                    Debug.WriteLine("Printer is currently not active");
+                    Debug.WriteLine(e.Message);
                     GCodeString = null;
                     return coordinateResponseValue;
                 }
@@ -139,14 +141,14 @@ namespace OctoprintClient
             }
             else
             {
-                Console.WriteLine("bufferpos isn't 0");
+                Debug.WriteLine("bufferpos isn't 0");
             }
             coordinateResponseValue[0] = Xpos;
             coordinateResponseValue[1] = Ypos;
             coordinateResponseValue[2] = Zpos;
             return coordinateResponseValue;
         }
-        public void SetPos(float? x, float? y, float? z)
+        public void SetPos(float? x=null, float? y=null, float? z=null)
         {
             if (x.HasValue)
             {
@@ -161,7 +163,7 @@ namespace OctoprintClient
                 Zpos = (float)z;
             }
         }
-        public void Move(float? x, float? y, float? z)
+        public void Move(float? x=null, float? y=null, float? z=null)
         {
 
             if (x.HasValue)
@@ -187,11 +189,11 @@ namespace OctoprintClient
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("download failed with");
-                    Console.WriteLine(e);
+                    Debug.WriteLine("download failed with");
+                    Debug.WriteLine(e);
                 }
             }
-            Console.WriteLine("got this long a String:" + GCodeString.Length);
+            Debug.WriteLine("got this long a String:" + GCodeString.Length);
             if (GCodeString.Length == 0)
             {
                 GCodeString = null;
@@ -309,7 +311,7 @@ namespace OctoprintClient
             if (bitspassed > 0 && GCodeString != null && GCodeString.Length > LastSyncPos + bitspassed)
                 linesPassed = GCodeString.Substring(LastSyncPos, bitspassed).Split(new[] { '\r', '\n' });
             else
-                Console.WriteLine("SomethingWrong");
+                Debug.WriteLine("SomethingWrong");
             int count = 0;
             float secondspassed = 0;
             foreach (string line in linesPassed)
@@ -317,7 +319,7 @@ namespace OctoprintClient
                 if (ReadLine(line)[0] < 0 || ReadLine(line)[1] < 0 || ReadLine(line)[2] < 0)
                 {
                     if (MovesBuffer.Count <= count)
-                        Console.WriteLine("count to high");
+                        Debug.WriteLine("count to high");
                     else
                         secondspassed += MovesBuffer[count][3];
                     count++;
@@ -352,7 +354,7 @@ namespace OctoprintClient
             return Home(new string[]{"x","y","z" });
         }
 
-        public string MoveTo(float? x,float? y, float? z, bool? absolute, int? speed)
+        public string MoveTo(float? x=null,float? y=null, float? z=null, bool? absolute=null, int? speed=null)
         {
             return Connection.Printers.MakePrintheadJog(x, y, z, absolute, speed);
         }
@@ -380,7 +382,7 @@ namespace OctoprintClient
                 if (IsReady())
                 {
                     Sync();
-                    Console.WriteLine("Syncing");
+                    Debug.WriteLine("Syncing");
                     //Console.WriteLine("buffer is this long: " + movesBuffer.Count);
                     Thread.Sleep(10000);
                 }

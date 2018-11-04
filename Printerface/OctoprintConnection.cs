@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -41,8 +42,8 @@ namespace OctoprintClient
         public string Get(string location)
         {
             string strResponseValue = string.Empty;
-            Console.WriteLine("This was searched:");
-            Console.WriteLine(EndPoint + location + "?apikey=" + ApiKey);
+            Debug.WriteLine("This was searched:");
+            Debug.WriteLine(EndPoint + location + "?apikey=" + ApiKey);
             WebClient wc = new WebClient();
             wc.Headers.Add("X-Api-Key", ApiKey);
             Stream downStream = wc.OpenRead(EndPoint + location);
@@ -56,8 +57,8 @@ namespace OctoprintClient
         public string PostString(string location, string arguments)
         {
             string strResponseValue = string.Empty;
-            Console.WriteLine("This was searched:");
-            Console.WriteLine(EndPoint + location + "?apikey=" + ApiKey);
+            Debug.WriteLine("This was searched:");
+            Debug.WriteLine(EndPoint + location + "?apikey=" + ApiKey);
             WebClient wc = new WebClient();
             wc.Headers.Add("X-Api-Key", ApiKey);
             strResponseValue = wc.UploadString(EndPoint + location, arguments);
@@ -67,8 +68,8 @@ namespace OctoprintClient
         public string PostJson(string location, JObject arguments)
         {
             string strResponseValue = string.Empty;
-            Console.WriteLine("This was searched:");
-            Console.WriteLine(EndPoint + location + "?apikey=" + ApiKey);
+            Debug.WriteLine("This was searched:");
+            Debug.WriteLine(EndPoint + location + "?apikey=" + ApiKey);
             String argumentString = string.Empty;
             argumentString = JsonConvert.SerializeObject(arguments);
             //byte[] byteArray = Encoding.UTF8.GetBytes(argumentString);
@@ -93,8 +94,8 @@ namespace OctoprintClient
         public string Delete(string location)
         {
             string strResponseValue = string.Empty;
-            Console.WriteLine("This was deleted:");
-            Console.WriteLine(EndPoint + location + "?apikey=" + ApiKey);
+            Debug.WriteLine("This was deleted:");
+            Debug.WriteLine(EndPoint + location + "?apikey=" + ApiKey);
             HttpWebRequest request = WebRequest.CreateHttp(EndPoint + location);// + "?apikey=" + apiKey);
             request.Method = "DELETE";
             request.Headers["X-Api-Key"]=ApiKey;
@@ -104,6 +105,22 @@ namespace OctoprintClient
             {
                 var result = streamReader.ReadToEnd();
             }
+            return strResponseValue;
+        }
+        public string PostMultipart(string packagestring,string location)
+        {
+            Debug.WriteLine("A Multipart was posted to:");
+            Debug.WriteLine(EndPoint + location + "?apikey=" + ApiKey);
+            string strResponseValue = String.Empty;
+            var webClient = new WebClient();
+            string boundary = "------------------------" + DateTime.Now.Ticks.ToString("x");
+            webClient.Headers.Add("Content-Type", "multipart/form-data; boundary=" + boundary);
+            webClient.Headers.Add("X-Api-Key", ApiKey);
+            packagestring.Replace("{0}", boundary);
+            string package = packagestring.Replace("{0}", boundary);
+
+            var nfile = webClient.Encoding.GetBytes(package);
+            byte[] resp = webClient.UploadData(EndPoint+location, "POST", nfile);
             return strResponseValue;
         }
 

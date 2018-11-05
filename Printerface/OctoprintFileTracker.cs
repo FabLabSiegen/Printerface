@@ -286,11 +286,12 @@ namespace OctoprintClient
                 "--{0}--\r\n";
             return Connection.PostMultipart(packagestring, "/api/files/local");
         }
-        public string UploadFile(string filename,  string path="", string location="local", bool select=false, bool print=false)
+
+        public string UploadFile(string filename,  string onlinepath="", string location="local", bool select=false, bool print=false)
         {
             string fileData =string.Empty;
             fileData= System.IO.File.ReadAllText(filename);
-
+            filename=(filename.Split('/')[filename.Split('/').Length-1]).Split('\\')[filename.Split('\\')[filename.Split('\\').Length - 1].Length - 1];
             string packagestring="" +
                 "--{0}\r\n" +
                 "Content-Disposition: form-data; name=\"file\"; filename=\""+filename+"\"\r\n" +
@@ -301,7 +302,7 @@ namespace OctoprintClient
                 "--{0}\r\n" +
                 "Content-Disposition: form-data; name=\"path\";\r\n" +
                 "\r\n" +
-                path + "\r\n" +
+                onlinepath + "\r\n" +
                 "--{0}--\r\n" +
                 "Content-Disposition: form-data; name=\"select\";\r\n" +
                 "\r\n" +

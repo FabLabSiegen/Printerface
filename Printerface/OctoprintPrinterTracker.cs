@@ -7,11 +7,21 @@ namespace OctoprintClient
 {
     public class OctoprintPrinterTracker:OctoprintTracker
     {
+
+        private OctoprintFullPrinterState currentstate;
+        private DateTime lastupdated;
+        public int BestBeforeMilisecs;
+        
         public OctoprintPrinterTracker(OctoprintConnection con):base(con)
         {
         }
         public OctoprintFullPrinterState GetFullPrinterState()
         {
+            TimeSpan passed = DateTime.Now.Subtract(lastupdated);
+            if (passed.Milliseconds > BestBeforeMilisecs)
+            {
+                return currentstate;
+            }
             string jobInfo = "";
             try {
                 jobInfo = Connection.Get("api/printer");
@@ -117,7 +127,8 @@ namespace OctoprintClient
                     result.TempState.History.Add(historicTempState);
                 }
             }
-
+            currentstate = result;
+            lastupdated = DateTime.Now;
             return result;
         }
         public OctoprintPrinterState GetPrinterState()
@@ -157,6 +168,8 @@ namespace OctoprintClient
                     ClosedOrError = stateflags.Value<bool?>("closedOrError") ?? false
                 }
             };
+            if (currentstate != null)
+                currentstate.PrinterState = result;
             return result;
 
         }

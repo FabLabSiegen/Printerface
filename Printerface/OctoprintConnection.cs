@@ -2,7 +2,8 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Text;
+using System.Net.WebSockets;
+using System.Threading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -21,6 +22,11 @@ namespace OctoprintClient
         public string EndPoint { get; set; }
         public string ApiKey { get; set; }
         public HttpVerb HttpMethod { get; set; }
+        ClientWebSocket WebSocket { get; set; }
+        public volatile bool listening = false;
+        public int WebSocketBufferSize = 4096;//if the buffer is to small the websocket might run into problems more often
+        //private CancellationTokenSource source;
+        //private CancellationToken token;
 
         public OctoprintPosTracker Position { get; set; }
         public OctoprintFileTracker Files { get; set; }
@@ -38,6 +44,11 @@ namespace OctoprintClient
             Files = new OctoprintFileTracker(this);
             Jobs = new OctoprintJobTracker(this);
             Printers = new OctoprintPrinterTracker(this);
+            //source = new CancellationTokenSource();
+            //token = source.Token;
+            var canceltoken = CancellationToken.None;
+            WebSocket = new ClientWebSocket();
+            WebSocket.ConnectAsync(new Uri("ws://"+EndPoint.Replace("https://", "").Replace("http://", "")+"sockjs/websocket"), canceltoken).GetAwaiter().GetResult();
         }
         public string Get(string location)
         {
@@ -123,7 +134,33 @@ namespace OctoprintClient
             byte[] resp = webClient.UploadData(EndPoint+location, "POST", nfile);
             return strResponseValue;
         }
+        public void Listen()
+        {
+            if (!listening)
+            {
+                listening = true;
+                Thread syncthread = new Thread(new ThreadStart(WebsocketRead));
+                syncthread.Start();
+            }
+        }
+        public void StopListening()
+        {
 
+            listening = false;
+        }
+        private void WebsocketRead()
+        {
+            var buffer = new byte[4096];
+            CancellationToken cancellation = CancellationToken.None;
+            //var awaiter = task.GetAwaiter();
+            WebSocketReceiveResult received = WebSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellation).GetAwaiter().GetResult();
+            while (!WebSocket.CloseStatus.HasValue && listening)
+            {
+                string text = System.Text.Encoding.UTF8.GetString(buffer, 0, received.Count);
+                Console.WriteLine(text);
+                received = WebSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellation).GetAwaiter().GetResult();
+            }
+        }
     }
     public class OctoprintTracker{
         protected OctoprintConnection Connection { get; set; }

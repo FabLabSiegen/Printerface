@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -7,8 +6,33 @@ namespace OctoprintClient
 {
     public class OctoprintJobTracker : OctoprintTracker
     {
+
         public OctoprintJobTracker(OctoprintConnection con) : base(con)
         {
+        }
+        public OctoprintJobInfo GetInfo()
+        {
+            OctoprintJobInfo result = new OctoprintJobInfo();
+            string jobInfo = Connection.Get("api/job");
+            JObject data = JsonConvert.DeserializeObject<JObject>(jobInfo);
+            JToken job = data.Value<JToken>("job");
+            result.EstimatedPrintTime = job.Value<int?>("estimatedPrintTime") ?? -1;
+            JToken filament = job.Value<JToken>("filament");
+            if(filament.HasValues)
+            result.Filament = new OctoprintFilamentInfo
+            {
+                Lenght = filament.Value<int?>("length") ?? -1,
+                Volume = filament.Value<int?>("volume") ?? -1
+            };
+            JToken file = job.Value<JToken>("file");
+            result.File = new OctoprintFile
+            {
+                Name = file.Value<String>("name") ?? "",
+                Origin = file.Value<String>("origin") ?? "",
+                Size = file.Value<int?>("size") ?? -1,
+                Date = file.Value<int?>("date") ?? -1
+            };
+            return result;
         }
         public OctoprintJobProgress GetProgress()
         {
@@ -75,6 +99,17 @@ namespace OctoprintClient
         {
             return Post("pause", "toggle");
         }
+    }
+    public class OctoprintFilamentInfo
+    {
+        public int Lenght { get; set; }
+        public double Volume { get; set; }
+    }
+    public class OctoprintJobInfo
+    {
+        public OctoprintFile File { get; set; }
+        public int EstimatedPrintTime { get; set; }
+        public OctoprintFilamentInfo Filament { get; set; }
     }
     public class OctoprintJobProgress
     {

@@ -8,6 +8,7 @@ namespace OctoprintClient
 {
     public class OctoprintFileTracker:OctoprintTracker
     {
+
         public OctoprintFileTracker(OctoprintConnection con):base(con)
         {
         }

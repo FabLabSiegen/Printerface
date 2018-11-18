@@ -17,6 +17,10 @@ namespace OctoprintClient
         PUT,
         DELETE
     }
+    public delegate void JobInfoHandler(OctoprintJobInfo Info);
+    public delegate void ProgressInfoHandler(OctoprintJobProgress Info);
+    public delegate void PrinterStateHandler(OctoprintPrinterState Info);
+    public delegate void CurrentZHandler(float CurrentZ);
     public class OctoprintConnection
     {
         public string EndPoint { get; set; }
@@ -27,6 +31,11 @@ namespace OctoprintClient
         public int WebSocketBufferSize = 4096;//if the buffer is to small the websocket might run into problems more often
         //private CancellationTokenSource source;
         //private CancellationToken token;
+        public event JobInfoHandler JobinfoHandlers;
+        public event ProgressInfoHandler ProgressHandlers;
+        public event PrinterStateHandler PrinterstateHandlers;
+        public event CurrentZHandler CurrentZHandlers;
+        //public OctoprintConnection e = null;
 
         public OctoprintPosTracker Position { get; set; }
         public OctoprintFileTracker Files { get; set; }
@@ -134,31 +143,121 @@ namespace OctoprintClient
             byte[] resp = webClient.UploadData(EndPoint+location, "POST", nfile);
             return strResponseValue;
         }
-        public void Listen()
+        public void WebsocketStop()
+        {
+            listening = false;
+        }
+        public void WebsocketStart()
         {
             if (!listening)
             {
                 listening = true;
-                Thread syncthread = new Thread(new ThreadStart(WebsocketRead));
+                Thread syncthread = new Thread(new ThreadStart(WebsocketSync));
                 syncthread.Start();
             }
         }
-        public void StopListening()
+        public void WebsocketSync()
         {
-
-            listening = false;
-        }
-        private void WebsocketRead()
-        {
+            string temporarystorage ="";
             var buffer = new byte[4096];
             CancellationToken cancellation = CancellationToken.None;
             //var awaiter = task.GetAwaiter();
-            WebSocketReceiveResult received = WebSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellation).GetAwaiter().GetResult();
-            while (!WebSocket.CloseStatus.HasValue && listening)
+            WebSocketReceiveResult received;// = WebSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellation).GetAwaiter().GetResult();
+            while (!WebSocket.CloseStatus.HasValue&&listening)
             {
-                string text = System.Text.Encoding.UTF8.GetString(buffer, 0, received.Count);
-                Console.WriteLine(text);
                 received = WebSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellation).GetAwaiter().GetResult();
+                string text = System.Text.Encoding.UTF8.GetString(buffer, 0, received.Count);
+                JObject obj=null;// = JObject(text);
+                //JObject.Parse(text);
+                try
+                {
+                    obj = JObject.Parse(text);
+                }catch{
+                    temporarystorage += text;
+                    try
+                    {
+                        obj=JObject.Parse(temporarystorage);
+                        temporarystorage = "";
+                    }
+                    catch
+                    {
+                        Debug.WriteLine("had to read something in more lines");
+                    }
+                }
+                if (obj != null){
+                    JToken current = obj.Value<JToken>("current");
+
+                    if (current!=null)
+                    {
+                        JToken progress = current.Value<JToken>("progress");
+                        if (progress!= null && ProgressHandlers!=null)
+                        {
+                            OctoprintJobProgress jobprogress = new OctoprintJobProgress();
+                            jobprogress.Completion = progress.Value<double?>("completion") ?? -1.0;
+                            jobprogress.Filepos = progress.Value<int?>("filepos") ?? -1;
+                            jobprogress.PrintTime = progress.Value<int?>("printTime") ?? -1;
+                            jobprogress.PrintTimeLeft = progress.Value<int?>("printTimeLeft") ?? -1;
+                            ProgressHandlers(jobprogress);
+                            Console.WriteLine("hey, i tried to post");
+                        }
+
+                        JToken job = current.Value<JToken>("job");
+                        if (job != null && JobinfoHandlers!=null)
+                        {
+                            OctoprintJobInfo jobInfo = new OctoprintJobInfo();
+                            jobInfo.EstimatedPrintTime = job.Value<int?>("estimatedPrintTime") ?? -1;
+                            JToken filament = job.Value<JToken>("filament");
+                            if (filament.HasValues)
+                                jobInfo.Filament = new OctoprintFilamentInfo
+                                {
+                                    Lenght = filament.Value<int?>("length") ?? -1,
+                                    Volume = filament.Value<int?>("volume") ?? -1
+                                };
+                            JToken file = job.Value<JToken>("file");
+                            jobInfo.File = new OctoprintFile
+                            {
+                                Name = file.Value<String>("name") ?? "",
+                                Origin = file.Value<String>("origin") ?? "",
+                                Size = file.Value<int?>("size") ?? -1,
+                                Date = file.Value<int?>("date") ?? -1
+                            };
+                            JobinfoHandlers(jobInfo);
+                            Console.WriteLine("hey, i tried to post");
+                        }
+
+                        JToken printerinfo = current.Value<JToken>("state");
+                        if (printerinfo != null && PrinterstateHandlers!=null)
+                        {
+                            JToken stateflags = printerinfo.Value<JToken>("flags");
+                            OctoprintPrinterState opstate = new OctoprintPrinterState()
+                            {
+                                Text = printerinfo.Value<String>("text"),
+                                Flags = new OctoprintPrinterFlags()
+                                {
+                                    Operational = stateflags.Value<bool?>("operational") ?? false,
+                                    Paused = stateflags.Value<bool?>("paused") ?? false,
+                                    Printing = stateflags.Value<bool?>("printing") ?? false,
+                                    Cancelling = stateflags.Value<bool?>("canceling") ?? false,
+                                    SDReady = stateflags.Value<bool?>("sdReady") ?? false,
+                                    Error = stateflags.Value<bool?>("error") ?? false,
+                                    Ready = stateflags.Value<bool?>("ready") ?? false,
+                                    ClosedOrError = stateflags.Value<bool?>("closedOrError") ?? false
+                                }
+                            };
+                            PrinterstateHandlers(opstate);
+                            Console.WriteLine("hey, i tried to post");
+                        }
+
+                        float? currentz = current.Value<float>("currentZ");
+                        if (currentz != null&&CurrentZHandlers!=null)
+                        {
+                            CurrentZHandlers((float)currentz);
+                            Console.WriteLine("hey, i tried to post");
+                        }
+
+                    }
+                }
+
             }
         }
     }

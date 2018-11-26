@@ -4,12 +4,51 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 namespace OctoprintClient
 {
+    /// <summary>
+    /// Tracks Jobs, can get Progress or other information, start, stop or pause jobs.
+    /// </summary>
     public class OctoprintJobTracker : OctoprintTracker
     {
 
+        /// <summary>
+        /// Initializes a Jobtracker, this shouldn't be done directly and is part of the Connection it needs anyway
+        /// </summary>
+        /// <param name="con">The Octoprint connection it connects to.</param>
         public OctoprintJobTracker(OctoprintConnection con) : base(con)
         {
         }
+
+
+        /// <summary>
+        /// Action for Eventhandling the Websocket Job info
+        /// </summary>
+        public event Action<OctoprintJobInfo> JobinfoHandlers;
+        public bool JobListens()
+        {
+            return JobinfoHandlers != null;
+        }
+        public void CallJob(OctoprintJobInfo i)
+        {
+            JobinfoHandlers(i);
+        }
+
+        /// <summary>
+        /// Action for Eventhandling the Websocket Progress info
+        /// </summary>
+        public event Action<OctoprintJobProgress> ProgressinfoHandlers;
+        public bool ProgressListens()
+        {
+            return ProgressinfoHandlers != null;
+        }
+        public void CallProgress(OctoprintJobProgress p) {
+            ProgressinfoHandlers.Invoke(p);
+        }
+
+
+        /// <summary>
+        /// Gets info of the current job
+        /// </summary>
+        /// <returns>The info.</returns>
         public OctoprintJobInfo GetInfo()
         {
             OctoprintJobInfo result = new OctoprintJobInfo();
@@ -34,6 +73,11 @@ namespace OctoprintClient
             };
             return result;
         }
+
+        /// <summary>
+        /// Gets the progress of the current job
+        /// </summary>
+        /// <returns>The progress.</returns>
         public OctoprintJobProgress GetProgress()
         {
             string jobInfo = Connection.Get("api/job");
@@ -46,6 +90,13 @@ namespace OctoprintClient
             result.PrintTimeLeft = progress.Value<int?>("printTimeLeft")??-1;
             return result;
         }
+
+        /// <summary>
+        /// Posts a command with a certain <paramref name="action"/>.
+        /// </summary>
+        /// <returns>The Http Result</returns>
+        /// <param name="command">The Command to execute on the Job.</param>
+        /// <param name="action">The exact action withing the command to take.</param>
         private string Post(string command, string action)
         { 
             string returnValue = string.Empty;
@@ -75,26 +126,57 @@ namespace OctoprintClient
             }
             return returnValue;
         }
+
+        /// <summary>
+        /// Starts the job.
+        /// </summary>
+        /// <returns>The Http Result</returns>
         public string StartJob()
         {
             return Post("start", "");
         }
+
+        /// <summary>
+        /// Cancels the job.
+        /// </summary>
+        /// <returns>The Http Result</returns>
         public string CancelJob()
         {
             return Post("cancel", "");
         }
+
+        /// <summary>
+        /// Restarts the job.
+        /// </summary>
+        /// <returns>The Http Result</returns>
         public string RestartJob()
         {
             return Post("restart", "");
         }
+
+
+        /// <summary>
+        /// Pauses the job.
+        /// </summary>
+        /// <returns>The Http Result</returns>
         public string PauseJob()
         {
             return Post("pause", "pause");
         }
+
+        /// <summary>
+        /// Resumes the job.
+        /// </summary>
+        /// <returns>The Http Result</returns>
         public string ResumeJob()
         {
             return Post("pause", "resume");
         }
+
+        /// <summary>
+        /// Pauses the job if it runs, resumes the Job if it is paused.
+        /// </summary>
+        /// <returns>The Http Result</returns>
         public string ToggleJob()
         {
             return Post("pause", "toggle");

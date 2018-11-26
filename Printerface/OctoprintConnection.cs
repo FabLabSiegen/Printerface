@@ -10,45 +10,59 @@ using Newtonsoft.Json.Linq;
 namespace OctoprintClient
 
 {
-    public enum HttpVerb
-    {
-        GET,
-        POST,
-        PUT,
-        DELETE
-    }
-    public delegate void JobInfoHandler(OctoprintJobInfo Info);
-    public delegate void ProgressInfoHandler(OctoprintJobProgress Info);
-    public delegate void PrinterStateHandler(OctoprintPrinterState Info);
-    public delegate void CurrentZHandler(float CurrentZ);
+    /// <summary>
+    /// is the base Class connecting your project to different parts of Octoprint.
+    /// </summary>
     public class OctoprintConnection
     {
+        /// <summary>
+        /// The end point URL like https://192.168.1.2/
+        /// </summary>
         public string EndPoint { get; set; }
+        /// <summary>
+        /// The end point Api Key like "ABCDE12345"
+        /// </summary>
         public string ApiKey { get; set; }
-        public HttpVerb HttpMethod { get; set; }
-        ClientWebSocket WebSocket { get; set; }
-        public volatile bool listening = false;
-        public int WebSocketBufferSize = 4096;//if the buffer is to small the websocket might run into problems more often
-        //private CancellationTokenSource source;
-        //private CancellationToken token;
-        public event JobInfoHandler JobinfoHandlers;
-        public event ProgressInfoHandler ProgressHandlers;
-        public event PrinterStateHandler PrinterstateHandlers;
-        public event CurrentZHandler CurrentZHandlers;
-        //public OctoprintConnection e = null;
 
+        /// <summary>
+        /// The Websocket Client
+        /// </summary>
+        ClientWebSocket WebSocket { get; set; }
+        /// <summary>
+        /// Defines if the WebsocketClient is listening and the Tread is running
+        /// </summary>
+        public volatile bool listening;
+        /// <summary>
+        /// The size of the web socket buffer. Should work just fine, if the Websocket sends more, it will be split in 4096 Byte and reassembled in this class.
+        /// </summary>
+        public int WebSocketBufferSize = 4096;
+
+        /// <summary>
+        /// Gets or sets the position. of the 3D printer, guesses it if necessary from the GCODE
+        /// </summary>
         public OctoprintPosTracker Position { get; set; }
+        /// <summary>
+        /// Gets or sets files in the Folders of the Octoprint Server
+        /// </summary>
         public OctoprintFileTracker Files { get; set; }
+        /// <summary>
+        /// Starts Jobs or reads progress of the Octoprint Server
+        /// </summary>
         public OctoprintJobTracker Jobs { get; set; }
+        /// <summary>
+        /// Reads the Hardware state, Temperatures and other information.
+        /// </summary>
         public OctoprintPrinterTracker Printers { get; set; }
 
-        //posdata
-
+        /// <summary>
+        /// Creates a <see cref="T:OctoprintClient.OctoprintConnection"/> 
+        /// </summary>
+        /// <param name="eP">The endpoint Address like "http://192.168.1.2/"</param>
+        /// <param name="aK">The Api Key of the User account you want to use. You can get this in the user settings</param>
         public OctoprintConnection(string eP, string aK)
         {
             EndPoint = eP;
             ApiKey = aK;
-            HttpMethod = HttpVerb.GET;
             Position = new OctoprintPosTracker(this);
             Files = new OctoprintFileTracker(this);
             Jobs = new OctoprintJobTracker(this);
@@ -59,6 +73,12 @@ namespace OctoprintClient
             WebSocket = new ClientWebSocket();
             WebSocket.ConnectAsync(new Uri("ws://"+EndPoint.Replace("https://", "").Replace("http://", "")+"sockjs/websocket"), canceltoken).GetAwaiter().GetResult();
         }
+
+        /// <summary>
+        /// A Get request for any String using your Account
+        /// </summary>
+        /// <returns>The result as a String, doesn't handle Exceptions</returns>
+        /// <param name="location">The url sub-address like "http://192.168.1.2/<paramref name="location"/>"</param>
         public string Get(string location)
         {
             string strResponseValue = string.Empty;
@@ -74,6 +94,12 @@ namespace OctoprintClient
             return strResponseValue;
         }
 
+        /// <summary>
+        /// Posts a string with the rights of your Account to a given <paramref name="location"/>..
+        /// </summary>
+        /// <returns>The Result if any exists. Doesn't handle exceptions</returns>
+        /// <param name="location">The url sub-address like "http://192.168.1.2/<paramref name="location"/>"</param>
+        /// <param name="arguments">The string to post tp the address</param>
         public string PostString(string location, string arguments)
         {
             string strResponseValue = string.Empty;
@@ -85,6 +111,12 @@ namespace OctoprintClient
             return strResponseValue;
         }
 
+        /// <summary>
+        /// Posts a JSON object as a string, uses JObject from Newtonsoft.Json to a given <paramref name="location"/>.
+        /// </summary>
+        /// <returns>The Result if any exists. Doesn't handle exceptions</returns>
+        /// <param name="location">The url sub-address like "http://192.168.1.2/<paramref name="location"/>"</param>
+        /// <param name="arguments">The Newtonsoft Jobject to post tp the address</param>
         public string PostJson(string location, JObject arguments)
         {
             string strResponseValue = string.Empty;
@@ -111,6 +143,11 @@ namespace OctoprintClient
             return strResponseValue;
         }
 
+        /// <summary>
+        /// Posts a Delete request to a given <paramref name="location"/>
+        /// </summary>
+        /// <returns>The Result if any, shouldn't return anything.</returns>
+        /// <param name="location">The url sub-address like "http://192.168.1.2/<paramref name="location"/>"</param>
         public string Delete(string location)
         {
             string strResponseValue = string.Empty;
@@ -127,6 +164,13 @@ namespace OctoprintClient
             }
             return strResponseValue;
         }
+
+        /// <summary>
+        /// Posts a multipart reqest to a given <paramref name="location"/>
+        /// </summary>
+        /// <returns>The Result if any.</returns>
+        /// <param name="packagestring">A packagestring should be generated elsewhere and input here as a String</param>
+        /// <param name="location">The url sub-address like "http://192.168.1.2/<paramref name="location"/>"</param>
         public string PostMultipart(string packagestring,string location)
         {
             Debug.WriteLine("A Multipart was posted to:");
@@ -143,10 +187,18 @@ namespace OctoprintClient
             byte[] resp = webClient.UploadData(EndPoint+location, "POST", nfile);
             return strResponseValue;
         }
+
+        /// <summary>
+        /// Stops the Websocket Thread.
+        /// </summary>
         public void WebsocketStop()
         {
             listening = false;
         }
+
+        /// <summary>
+        /// Starts the Websocket Thread.
+        /// </summary>
         public void WebsocketStart()
         {
             if (!listening)
@@ -156,7 +208,11 @@ namespace OctoprintClient
                 syncthread.Start();
             }
         }
-        public void WebsocketSync()
+
+        /// <summary>
+        /// The Websocket Thread function,runs and never stops
+        /// </summary>
+        private void WebsocketSync()
         {
             string temporarystorage ="";
             var buffer = new byte[4096];
@@ -187,25 +243,28 @@ namespace OctoprintClient
                 if (obj != null){
                     JToken current = obj.Value<JToken>("current");
 
-                    if (current!=null)
+                    if (current!=null && Jobs.ProgressListens())
                     {
                         JToken progress = current.Value<JToken>("progress");
-                        if (progress!= null && ProgressHandlers!=null)
+                        if (progress!= null)
                         {
-                            OctoprintJobProgress jobprogress = new OctoprintJobProgress();
-                            jobprogress.Completion = progress.Value<double?>("completion") ?? -1.0;
-                            jobprogress.Filepos = progress.Value<int?>("filepos") ?? -1;
-                            jobprogress.PrintTime = progress.Value<int?>("printTime") ?? -1;
-                            jobprogress.PrintTimeLeft = progress.Value<int?>("printTimeLeft") ?? -1;
-                            ProgressHandlers(jobprogress);
-                            Console.WriteLine("hey, i tried to post");
+                            OctoprintJobProgress jobprogress = new OctoprintJobProgress
+                            {
+                                Completion = progress.Value<double?>("completion") ?? -1.0,
+                                Filepos = progress.Value<int?>("filepos") ?? -1,
+                                PrintTime = progress.Value<int?>("printTime") ?? -1,
+                                PrintTimeLeft = progress.Value<int?>("printTimeLeft") ?? -1
+                            };
+                            Jobs.CallProgress(jobprogress);
                         }
 
                         JToken job = current.Value<JToken>("job");
-                        if (job != null && JobinfoHandlers!=null)
+                        if (job != null && Jobs.JobListens())
                         {
-                            OctoprintJobInfo jobInfo = new OctoprintJobInfo();
-                            jobInfo.EstimatedPrintTime = job.Value<int?>("estimatedPrintTime") ?? -1;
+                            OctoprintJobInfo jobInfo = new OctoprintJobInfo
+                            {
+                                EstimatedPrintTime = job.Value<int?>("estimatedPrintTime") ?? -1
+                            };
                             JToken filament = job.Value<JToken>("filament");
                             if (filament.HasValues)
                                 jobInfo.Filament = new OctoprintFilamentInfo
@@ -221,12 +280,11 @@ namespace OctoprintClient
                                 Size = file.Value<int?>("size") ?? -1,
                                 Date = file.Value<int?>("date") ?? -1
                             };
-                            JobinfoHandlers(jobInfo);
-                            Console.WriteLine("hey, i tried to post");
+                            Jobs.CallJob(jobInfo);
                         }
 
                         JToken printerinfo = current.Value<JToken>("state");
-                        if (printerinfo != null && PrinterstateHandlers!=null)
+                        if (printerinfo != null && Printers.StateListens())
                         {
                             JToken stateflags = printerinfo.Value<JToken>("flags");
                             OctoprintPrinterState opstate = new OctoprintPrinterState()
@@ -244,15 +302,13 @@ namespace OctoprintClient
                                     ClosedOrError = stateflags.Value<bool?>("closedOrError") ?? false
                                 }
                             };
-                            PrinterstateHandlers(opstate);
-                            Console.WriteLine("hey, i tried to post");
+                            Printers.CallPrinterState(opstate);
                         }
 
                         float? currentz = current.Value<float>("currentZ");
-                        if (currentz != null&&CurrentZHandlers!=null)
+                        if (currentz != null&& Printers.ZListens() )
                         {
-                            CurrentZHandlers((float)currentz);
-                            Console.WriteLine("hey, i tried to post");
+                            Printers.CallCurrentZ((float)currentz);
                         }
 
                     }
@@ -261,6 +317,9 @@ namespace OctoprintClient
             }
         }
     }
+    /// <summary>
+    /// The base class for the different Trackers
+    /// </summary>
     public class OctoprintTracker{
         protected OctoprintConnection Connection { get; set; }
         public OctoprintTracker(OctoprintConnection con)

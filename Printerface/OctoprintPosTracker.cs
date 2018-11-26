@@ -9,22 +9,74 @@ using System.Diagnostics;
 
 namespace OctoprintClient
 {
+    /// <summary>
+    /// Octoprint position tracker. tracks the Position and guesses the position if needed.
+    /// </summary>
     public class OctoprintPosTracker:OctoprintTracker
     {
+        /// <summary>
+        /// The GCode in the form of a String.
+        /// </summary>
         private string GCodeString { get; set; }
+
+        /// <summary>
+        /// The X position.
+        /// </summary>
         private float Xpos { get; set; }
+        /// <summary>
+        /// The Y position.
+        /// </summary>
         private float Ypos { get; set; }
+        /// <summary>
+        /// The Z position.
+        /// </summary>
         private float Zpos { get; set; }
+
+        /// <summary>
+        /// Buffers changes in the feedrate for guessing
+        /// </summary>
         private float FeedrateBuffer { get; set; }
         private float[] MaxFeedRateBuffer { get; set; }
+
+        /// <summary>
+        /// Buffers movements for guessing
+        /// </summary>
         private List<float[]> MovesBuffer { get; set; }
+
+        /// <summary>
+        /// Buffers positions for guessing
+        /// </summary>
         private float[] BufferPos { get; set; }
+
+        /// <summary>
+        /// The Position in bytes within the GCode
+        /// </summary>
         private static int GcodePos { get; set; }
+
+        /// <summary>
+        /// The position synced last.
+        /// </summary>
         private static int LastSyncPos { get; set; }
+
+        /// <summary>
+        /// the Thread for syncing
+        /// </summary>
         private Thread syncthread;
-        private volatile bool threadstop=false;
-        private bool threadrunning=false;
+
+        /// <summary>
+        /// used to stop the thread
+        /// </summary>
+        private volatile bool threadstop;
+
+        /// <summary>
+        /// used to keep track of the passed time for guessing the position
+        /// </summary>
         private Stopwatch watch = Stopwatch.StartNew();
+
+        /// <summary>
+        /// Initializes a Positiontracker, this shouldn't be done directly and is part of the Connection it needs anyway
+        /// </summary>
+        /// <param name="con">The Octoprint connection it connects to.</param>
         public OctoprintPosTracker(OctoprintConnection con):base(con)
         {
             BufferPos = new float[] { 0, 0, 0, 0 };
@@ -33,6 +85,11 @@ namespace OctoprintClient
             //syncthread = new Thread(new ThreadStart(AutoSync));
             //syncthread.Start();
         }
+
+        /// <summary>
+        /// Releases unmanaged resources and performs other cleanup operations before the
+        /// <see cref="T:OctoprintClient.OctoprintPosTracker"/> is reclaimed by garbage collection.
+        /// </summary>
         ~OctoprintPosTracker(){
 
             threadstop = true;
@@ -46,24 +103,24 @@ namespace OctoprintClient
             {
 
             }
-            threadrunning = false;
             watch.Stop();
         }
+
+        /// <summary>
+        /// Gets the position asynchroniously, guesses between Sync intervals, starts thread if it isn't allready running.
+        /// </summary>
+        /// <returns>The position of the Printhead.</returns>
         public float[] GetPosAsync()
         {
-            if (!threadrunning)
+            if (!syncthread.IsAlive)
             {
-                Console.WriteLine("starting thread at 56");
                 StartThread();
             }
             float[] PosResult = { 0, 0, 0 };
             long millisecondsPassed = watch.ElapsedMilliseconds;
             float secondsPassed = (float)millisecondsPassed / (float)1000.0;
-            //Console.WriteLine(secondsPassed);
             for (int i = 0; i < MovesBuffer.Count - 1; i++)
             {
-                //Console.WriteLine("reading movesbuffer");
-
                 if (secondsPassed >= MovesBuffer[i + 1][3])
                     secondsPassed -= MovesBuffer[i + 1][3];
                 else
@@ -74,22 +131,21 @@ namespace OctoprintClient
                     PosResult = new float[] { MovesBuffer[i][0] + (MovesBuffer[i + 1][0] - MovesBuffer[i][0]) * factor,
                         MovesBuffer[i][1] + (MovesBuffer[i + 1][1] - MovesBuffer[i][1]) * factor,
                         MovesBuffer[i][2] + (MovesBuffer[i + 1][2] - MovesBuffer[i][2]) * factor };
-                    //Console.WriteLine(movesBuffer[i][0]+"/"+movesBuffer[i][1]+"/"+movesBuffer[i][2]);
-                    //Console.WriteLine(PosResult[0]+"/"+PosResult[1]+"/"+PosResult[2]);
                     break;
                 }
             }
-            //Console.WriteLine("Returning");
             return PosResult;
             //Timersince Sync
             //get Pos from Buffer
         }
+
+        /// <summary>
+        /// Gets the current position Synchroniously at this exact time, should not be used many times per seconds though, that's why GetPosAsync exists.
+        /// </summary>
+        /// <returns>The current Position of the Printhead.</returns>
         public float[] GetCurrentPosSync()
         {
             float[] coordinateResponseValue = { 0, 0, 0 };
-            //string jobInfo = Connection.Get("api/job");
-            //JObject data = JsonConvert.DeserializeObject<JObject>(jobInfo);
-            //JToken progressdata = data.Value<JToken>("progress");
             OctoprintJobProgress progress = Connection.Jobs.GetProgress();
             OctoprintJobInfo info = Connection.Jobs.GetInfo();
             if (GCodeString == null)
@@ -98,33 +154,7 @@ namespace OctoprintClient
                 {
                     GetGCode(info.File.Origin + "/" + info.File.Name);
                 }
-                ////Console.WriteLine(data["progress"]["filepos"]);
-                //try
-                //{
-                //    JToken jobdata = data.Value<JToken>("job");
-                //    if(jobdata != null)
-                //    {
-                //        JToken filedata = jobdata.Value<JToken>("file");
-                //        if (filedata != null)
-                //        {
-                //            string filelocation = filedata.Value<String>("origin") + "/" + filedata.Value<String>("name");
-                //            if(progressdata!=null)
-                //                GetGCode(filelocation, progressdata.Value<int?>("filepos")??-1);
-                //        }
-                //    }
-                //}
-                //catch (Exception e)
-                //{
-
-                //    Debug.WriteLine("Printer is currently not active");
-                //    Debug.WriteLine(e.Message);
-                //    GCodeString = null;
-                //    return coordinateResponseValue;
-                //}
             }
-            //if (progressdata != null)
-            //{
-
                 string[] linesLeft = GCodeString.Substring(progress.Filepos).Split(new[] { '\r', '\n' });
                 if (GcodePos != (progress.Filepos))
                 {
@@ -152,6 +182,13 @@ namespace OctoprintClient
             coordinateResponseValue[2] = Zpos;
             return coordinateResponseValue;
         }
+
+        /// <summary>
+        /// Sets the internal representation of the Printhead-Position, doesn't post to octoprint though
+        /// </summary>
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The y coordinate.</param>
+        /// <param name="z">The z coordinate.</param>
         public void SetPos(float? x=null, float? y=null, float? z=null)
         {
             if (x.HasValue)
@@ -167,6 +204,13 @@ namespace OctoprintClient
                 Zpos = (float)z;
             }
         }
+
+        /// <summary>
+        /// Moves the internal representation of the Printhead-Position, doesn't post to octoprint though
+        /// </summary>
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The y coordinate.</param>
+        /// <param name="z">The z coordinate.</param>
         public void Move(float? x=null, float? y=null, float? z=null)
         {
 
@@ -183,25 +227,29 @@ namespace OctoprintClient
                 Zpos += (float)z;
             }
         }
+
+        /// <summary>
+        /// Gets the gcode from the given location
+        /// </summary>
+        /// <param name="location">Location the GCode file exists under, can only get this from local.</param>
         private void GetGCode(string location)
         {
-            Console.WriteLine("get gcode location "+ location );
+            Debug.WriteLine("get gcode location "+ location );
             using (var wc = new System.Net.WebClient())
             {
                 try
                 {
-                    //wc.Headers.Add("X-Api-Key", Connection.ApiKey);
-                    Console.WriteLine("downloading: " + Connection.EndPoint + "downloads/files/" + location + "?apikey=" + Connection.ApiKey);
+                    Debug.WriteLine("downloading: " + Connection.EndPoint + "downloads/files/" + location + "?apikey=" + Connection.ApiKey);
                     GCodeString = wc.DownloadString(Connection.EndPoint + "downloads/files/" + location+ "?apikey=" + Connection.ApiKey);
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("download failed with");
-                    Console.WriteLine(e);
+                    Debug.WriteLine("download failed with");
+                    Debug.WriteLine(e);
                     return;
                 }
             }
-            Console.WriteLine("got this long a String:" + GCodeString.Length);
+            Debug.WriteLine("got this long a String:" + GCodeString.Length);
             if (GCodeString.Length == 0)
             {
                 GCodeString = null;
@@ -229,7 +277,7 @@ namespace OctoprintClient
                     string currline = linesLeft[0];
                     ReadLineForwards(currline);
                 }
-                Console.WriteLine("setting Gcodepos to new value " + progress.Filepos);
+                Debug.WriteLine("setting Gcodepos to new value " + progress.Filepos);
                 GcodePos = progress.Filepos;
             }
             if (MovesBuffer.Count == 0)
@@ -246,6 +294,12 @@ namespace OctoprintClient
             }
             //GcodePos = progress.Filepos - 1;
         }
+
+        /// <summary>
+        /// Reads one line of the GCode, only G1 and M203 return something
+        /// </summary>
+        /// <returns>The Coordinates of the G1 or M203 command</returns>
+        /// <param name="currline">The line to read</param>
         private float[] ReadLine(string currline)
         {
             float[] lineResponseValue = { -1, -1, -1, -1 };
@@ -297,6 +351,11 @@ namespace OctoprintClient
             }
             return lineResponseValue;
         }
+
+        /// <summary>
+        /// Reads the line and sets the Positions.
+        /// </summary>
+        /// <param name="currline">The line</param>
         private void ReadLineForwards(string currline)
         {
             float[] coords = ReadLine(currline);
@@ -305,6 +364,11 @@ namespace OctoprintClient
             if (coords[2] > 0) Zpos = coords[2];
             if (coords[3] > 0) FeedrateBuffer = coords[3];
         }
+
+        /// <summary>
+        /// Reads the line and adds it to the buffer for guessing later.
+        /// </summary>
+        /// <param name="currline">The Line to read.</param>
         private void ReadLineToBuffer(string currline)
         {
             float[] coords = ReadLine(currline);
@@ -327,6 +391,11 @@ namespace OctoprintClient
                 BufferPos = new float[] { coords[0], coords[1], coords[2] };
             }
         }
+
+        /// <summary>
+        /// Sets the position by reading what happened in the past before the GCodePos and adding things that are not set.
+        /// </summary>
+        /// <param name="currline">The Line to read</param>
         private void ReadLineBackwards(string currline)
         {
 
@@ -336,47 +405,14 @@ namespace OctoprintClient
             if (coords[2] > 0 && Math.Abs(Zpos) < 0.0001) Zpos = coords[2];
             if (coords[3] > 0 && Math.Abs(FeedrateBuffer) < 0.0001) FeedrateBuffer = coords[3];
         }
+
+        /// <summary>
+        /// Syncronizes the position with a Thread
+        /// </summary>
         public void Syncpos()
         {
-            //string JobStatusString = Connection.Get("api/job");
-            //JObject JobStatus = JsonConvert.DeserializeObject<JObject>(JobStatusString);
-            //JToken progressdata = JobStatus.Value<JToken>("progress");
-            //if (GCodeString == null)
-            //{
-            //    //Console.WriteLine(data["progress"]["filepos"]);
-            //    try
-            //    {
-            //        JToken jobdata = JobStatus.Value<JToken>("job");
-            //        if (jobdata != null)
-            //        {
-            //            JToken filedata = jobdata.Value<JToken>("file");
-            //            if (filedata != null)
-            //            {
-            //                string filelocation = filedata.Value<String>("origin") + "/" + filedata.Value<String>("name");
-            //                if (progressdata != null)
-            //                    GetGCode(filelocation, progressdata.Value<int?>("filepos") ?? -1);
-            //            }
-            //        }
-            //    }
-            //    catch (Exception e)
-            //    {
-
-            //        Console.WriteLine("Printer is currently not active");
-            //        Console.WriteLine(e.Message);
-            //        GCodeString = null;
-            //    }
-            //}
-            //else
-            //{
-            //    if (JobStatus.Value<JToken>("job") == null)
-            //    {
-            //        GCodeString = null;
-            //    }
-            //}
-
             OctoprintJobProgress progress = Connection.Jobs.GetProgress();
             OctoprintJobInfo info = Connection.Jobs.GetInfo();
-            Console.WriteLine("about to read gcode from" + info.File.Origin);
             if (GCodeString == null)
             {
                 if (info.File.Name != "" &&info.File.Origin=="local")
@@ -389,17 +425,12 @@ namespace OctoprintClient
             {
                 return;
             }
-            Console.WriteLine("readgcode");
             int bitspassed = (progress.Filepos - 1) - LastSyncPos;
             string[] linesPassed = { };
-            Console.WriteLine("bitspassed: ");
-            Console.WriteLine(bitspassed);
-            Console.WriteLine(" GCodeString==null: " + GCodeString.Length);
-            Console.WriteLine(" LastSyncPos = " + LastSyncPos);
             if (bitspassed > 0 && GCodeString != null && GCodeString.Length > LastSyncPos + bitspassed)
                 linesPassed = GCodeString.Substring(LastSyncPos, bitspassed).Split(new[] { '\r', '\n' });
             else
-                Console.WriteLine("SomethingWrong");
+                Debug.WriteLine("Something Wrong in Postrackers Syncpos");
             int count = 0;
             float secondspassed = 0;
             foreach (string line in linesPassed)
@@ -407,7 +438,7 @@ namespace OctoprintClient
                 if (ReadLine(line)[0] < 0 || ReadLine(line)[1] < 0 || ReadLine(line)[2] < 0)
                 {
                     if (MovesBuffer.Count <= count)
-                        Console.WriteLine("count to high");
+                        Debug.WriteLine("count seems to high");
                     else
                         secondspassed += MovesBuffer[count][3];
                     count++;
@@ -421,6 +452,11 @@ namespace OctoprintClient
                 //movesBuffer.RemoveAt(0);
             }
         }
+
+        /// <summary>
+        /// Checks if the GCode allready exists
+        /// </summary>
+        /// <returns><c>true</c>, if GCode is downloaded, <c>false</c> otherwise.</returns>
         public Boolean IsReady()
         {
             //Console.WriteLine("Gcodepos "+GcodePos+" Lastsyncpos "+LastSyncPos);
@@ -434,6 +470,11 @@ namespace OctoprintClient
             else return false;
         }
 
+        /// <summary>
+        /// Home the specified axes.
+        /// </summary>
+        /// <returns>The Http response.</returns>
+        /// <param name="axes">Axes. in string "x", "y" or "z"</param>
         public string Home(string[] axes)
         {
             return Connection.Printers.MakePrintheadHome(axes);
@@ -443,27 +484,46 @@ namespace OctoprintClient
             return Home(new string[]{"x","y","z" });
         }
 
-        public string MoveTo(float? x=null,float? y=null, float? z=null, bool? absolute=null, int? speed=null)
+        /// <summary>
+        /// Moves the actual printhead to a position.
+        /// </summary>
+        /// <returns>The Http response.</returns>
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The y coordinate.</param>
+        /// <param name="z">The z coordinate.</param>
+        /// <param name="absolute">If set to <c>true</c> The position is set to absolute.</param>
+        /// <param name="speed">Speed.</param>
+        public string MoveTo(float? x=null,float? y=null, float? z=null, bool absolute=false, int? speed=null)
         {
             return Connection.Printers.MakePrintheadJog(x, y, z, absolute, speed);
         }
 
+        /// <summary>
+        /// Starts the thread.
+        /// </summary>
         public void StartThread()
         {
-            if (!threadrunning)
+            if (!syncthread.IsAlive)
             {
-                Console.WriteLine("make thread run");
-                threadrunning = true;
+                Debug.WriteLine("making thread run");
                 syncthread = new Thread(new ThreadStart(AutoSync));
                 syncthread.Start();
                 Sync();
 
             }
         }
+
+        /// <summary>
+        /// Stops the thread.
+        /// </summary>
         public void StopThread()
         {
             threadstop = true;
         }
+
+        /// <summary>
+        /// Sync the position.
+        /// </summary>
         private void Sync()
         {
             try
@@ -472,20 +532,24 @@ namespace OctoprintClient
             }
             catch (System.Net.WebException e)
             {
-                Console.WriteLine("something happened with the web connection"+e.Message);
+                Debug.WriteLine("something happened with the web connection"+e.Message);
             }
             watch.Reset();
             watch.Start();
         }
+
+        /// <summary>
+        /// The thread function.
+        /// </summary>
         private void AutoSync()
         {
-            Console.WriteLine("autosync");
+            Debug.WriteLine("autosync");
             while (threadstop == false)
             {
                 if (IsReady())
                 {
                     Sync();
-                    Console.WriteLine("Syncing");
+                    Debug.WriteLine("Syncing");
                     //Console.WriteLine("buffer is this long: " + movesBuffer.Count);
                     Thread.Sleep(10000);
                 }

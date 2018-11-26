@@ -6,12 +6,22 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 namespace OctoprintClient
 {
+    /// <summary>
+    /// Tracks Files, can delete, uplad and slice.
+    /// </summary>
     public class OctoprintFileTracker:OctoprintTracker
     {
-
+        /// <summary>
+        /// Initializes a Filetracker, this shouldn't be done directly and is part of the Connection it needs anyway
+        /// </summary>
+        /// <param name="con">The Octoprint connection it connects to.</param>
         public OctoprintFileTracker(OctoprintConnection con):base(con)
         {
         }
+
+        /// <summary>
+        /// Gets all the files on the Server
+        /// </summary>
         public OctoprintFolder GetFiles()
         {
             OctoprintFolder rootfolder = new OctoprintFolder() { Name = "root", Path = "/", Type = "root" };
@@ -72,6 +82,12 @@ namespace OctoprintClient
             return rootfolder;
 
         }
+
+        /// <summary>
+        /// Gets certain file informations
+        /// </summary>
+        /// <returns>The file Informations.</returns>
+        /// <param name="path">The path to the Folder or File.</param>
         public OctoprintFolder GetFiles(string path)
         {
             string jobInfo="";
@@ -146,16 +162,22 @@ namespace OctoprintClient
             }
             return folder;
         }
-        public string Select( string path, string location="local", bool? print=null)
+
+        /// <summary>
+        /// Selects the File for printing
+        /// </summary>
+        /// <returns>The Http Result</returns>
+        /// <param name="path">The path of the file that should be selected.</param>
+        /// <param name="location">The location (local or sdcard) where this File should be. Normally local</param>
+        /// <param name="print">If set, defines if the GCode should be printed directly after being selected. null means false</param>
+        public string Select( string path, string location="local", bool print=false)
         {
             JObject data = new JObject
             {
-                { "command", "select" }
+                { "command", "select" },
+                { "print", print}
             };
-            if (print != null)
-            {
-                data.Add("print", print);
-            }
+
 
             try
             {
@@ -173,19 +195,33 @@ namespace OctoprintClient
 
             }
         }
-        public string Slice(string location, string path, bool? select=null, string gcode="", int posx=100, int posy=100, string slicer="", string profile="", Dictionary<string,string> profileparam=null, bool? print=null)
+
+        /// <summary>
+        /// Slices a certain 3D object.
+        /// </summary>
+        /// <returns>The Http Result</returns>
+        /// <param name="location">The Location of the stl file, sdcard or local.</param>
+        /// <param name="path">The Path to the File.</param>
+        /// <param name="select">If set to <c>true</c> selects the file for printing</param>
+        /// <param name="gcode">Gcode filename to slice to.</param>
+        /// <param name="posx">Position of the Object on the Printbed in x direction.</param>
+        /// <param name="posy">Position of the Object on the Printbed in y direction.</param>
+        /// <param name="slicer">The name of the Slicer, if none is given it defaults to the internal Cura.</param>
+        /// <param name="profile">The Profile of the Slicer.</param>
+        /// <param name="profileparam">Parameter of the slicer that need to be overwriten from the Profile.</param>
+        /// <param name="print">If set to <c>true</c> prints the GCode after slicing.</param>
+        public string Slice(string location, string path, bool select=false, string gcode="", int posx=100, int posy=100, string slicer="", string profile="", Dictionary<string,string> profileparam=null, bool print=false)
         {
             JObject data = new JObject
             {
                 { "command", "slice" },
                 { "slicer", slicer},
-                { "position", new JObject{ {"x",posx },{"y",posy } } }
+                { "position", new JObject{ {"x",posx },{"y",posy } } },
+                { "select", select},
+                { "print", print}
+
 
             };
-            if (select != null)
-            {
-                data.Add("select", select);
-            }
             if (profileparam!=null && profileparam.Count>0)
             {
                 data.Add(JObject.FromObject(profileparam));
@@ -197,10 +233,6 @@ namespace OctoprintClient
             if (gcode != "")
             {
                 data.Add("gcode", gcode);
-            }
-            if (print != null)
-            {
-                data.Add("print", print);
             }
             try {
                 return Connection.PostJson("api/files/" + location + "/" + path, data);
@@ -225,6 +257,14 @@ namespace OctoprintClient
 
 
         }
+
+        /// <summary>
+        /// Copies file inside a location
+        /// </summary>
+        /// <returns>The Http Result</returns>
+        /// <param name="location">Location, either sdcard or local.</param>
+        /// <param name="path">The Path of the file that should be copied.</param>
+        /// <param name="destination">The destination to copy to.</param>
         public string Copy(string location, string path, string destination)
         {
             JObject data = new JObject
@@ -250,6 +290,13 @@ namespace OctoprintClient
 
             }
         }
+
+        /// <summary>
+        /// Deletes a File
+        /// </summary>
+        /// <returns>The Http Result</returns>
+        /// <param name="location">Location of the File to delete, sdcard or local</param>
+        /// <param name="path">The path of the File to delete.</param>
         public string Delete(string location, string path)
         {
             try {
@@ -271,6 +318,12 @@ namespace OctoprintClient
 
 
         }
+
+        /// <summary>
+        /// Creates a folder, if a subfolder should be created, create it with slashes and the path before it.
+        /// </summary>
+        /// <returns>The Http Result</returns>
+        /// <param name="path">The Path of the Folder.</param>
         public string CreateFolder(string path)
         {
             string foldername = path.Split('/')[path.Split('/').Length - 1];
@@ -288,6 +341,15 @@ namespace OctoprintClient
             return Connection.PostMultipart(packagestring, "/api/files/local");
         }
 
+        /// <summary>
+        /// Uploads a file from local to the Server
+        /// </summary>
+        /// <returns>The Http Result</returns>
+        /// <param name="filename">Filename of the local file.</param>
+        /// <param name="onlinepath">Path to upload the file to.</param>
+        /// <param name="location">Location to upload to, local or sdcard, not sure if sdcard works, but takes ages anyway.</param>
+        /// <param name="select">If set to <c>true</c> selects the File to print next.</param>
+        /// <param name="print">If set to <c>true</c> prints the File.</param>
         public string UploadFile(string filename,  string onlinepath="", string location="local", bool select=false, bool print=false)
         {
             string fileData =string.Empty;

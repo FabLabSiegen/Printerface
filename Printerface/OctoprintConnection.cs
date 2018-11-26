@@ -61,7 +61,7 @@ namespace OctoprintClient
         /// <param name="aK">The Api Key of the User account you want to use. You can get this in the user settings</param>
         public OctoprintConnection(string eP, string aK)
         {
-            EndPoint = eP;
+            SetEndPointDirty(eP);
             ApiKey = aK;
             Position = new OctoprintPosTracker(this);
             Files = new OctoprintFileTracker(this);
@@ -72,6 +72,42 @@ namespace OctoprintClient
             var canceltoken = CancellationToken.None;
             WebSocket = new ClientWebSocket();
             WebSocket.ConnectAsync(new Uri("ws://"+EndPoint.Replace("https://", "").Replace("http://", "")+"sockjs/websocket"), canceltoken).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Sets the end point from dirty input, checks for common faults.
+        /// </summary>
+        private void SetEndPointDirty(string eP)
+        {
+            if (eP.EndsWith("/", StringComparison.Ordinal))
+            {
+                if (eP.StartsWith("http", StringComparison.Ordinal))
+                    EndPoint = eP;
+                else
+                    EndPoint = "http://" + eP;
+            }
+            else
+            {
+                if (eP.StartsWith("http", StringComparison.Ordinal))
+                    EndPoint = eP + "/";
+                else
+                    EndPoint = "http://" + eP + "/";
+            }
+        }
+
+        /// <summary>
+        /// Gets the websocketUrl.
+        /// </summary>
+        /// <returns>The websocket Url.</returns>
+        private string GetWebsocketurl()
+        {
+            string result = EndPoint;
+
+            result = result.Replace("http://", "");
+            result = result.Replace("https://", "");
+            result = "ws://" + result + "sockjs/websocket";
+
+            return result;
         }
 
         /// <summary>

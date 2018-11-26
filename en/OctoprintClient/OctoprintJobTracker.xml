@@ -4,6 +4,7 @@
   <AssemblyInfo>
     <AssemblyName>Printerface</AssemblyName>
     <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+    <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
   </AssemblyInfo>
   <Base>
     <BaseTypeName>OctoprintClient.OctoprintTracker</BaseTypeName>
@@ -20,6 +21,7 @@
       <MemberType>Constructor</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <Parameters>
         <Parameter Name="con" Type="OctoprintClient.OctoprintConnection" />
@@ -36,6 +38,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.Void</ReturnType>
@@ -55,6 +58,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.Void</ReturnType>
@@ -74,6 +78,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.String</ReturnType>
@@ -91,6 +96,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>OctoprintClient.OctoprintJobInfo</ReturnType>
@@ -108,6 +114,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>OctoprintClient.OctoprintJobProgress</ReturnType>
@@ -125,6 +132,7 @@
       <MemberType>Event</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.Action&lt;OctoprintClient.OctoprintJobInfo&gt;</ReturnType>
@@ -140,6 +148,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.Boolean</ReturnType>
@@ -157,6 +166,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.String</ReturnType>
@@ -174,6 +184,7 @@
       <MemberType>Event</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.Action&lt;OctoprintClient.OctoprintJobProgress&gt;</ReturnType>
@@ -189,6 +200,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.Boolean</ReturnType>
@@ -206,6 +218,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.String</ReturnType>
@@ -223,6 +236,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.String</ReturnType>
@@ -240,6 +254,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.String</ReturnType>
@@ -257,6 +272,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.String</ReturnType>

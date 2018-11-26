@@ -1,6 +1,6 @@
 <Overview>
   <Assemblies>
-    <Assembly Name="Printerface" Version="1.0.6904.21521">
+    <Assembly Name="Printerface" Version="1.0.6904.22953">
       <Attributes>
         <Attribute>
           <AttributeName>System.Diagnostics.Debuggable(System.Diagnostics.DebuggableAttribute+DebuggingModes.IgnoreSymbolStoreSequencePoints)</AttributeName>

@@ -4,6 +4,7 @@
   <AssemblyInfo>
     <AssemblyName>Printerface</AssemblyName>
     <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+    <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
   </AssemblyInfo>
   <Base>
     <BaseTypeName>System.Object</BaseTypeName>
@@ -20,6 +21,7 @@
       <MemberType>Constructor</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <Parameters>
         <Parameter Name="eP" Type="System.String" />
@@ -38,6 +40,7 @@
       <MemberType>Property</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.String</ReturnType>
@@ -54,6 +57,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.String</ReturnType>
@@ -74,6 +78,7 @@
       <MemberType>Property</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.String</ReturnType>
@@ -90,6 +95,7 @@
       <MemberType>Property</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>OctoprintClient.OctoprintFileTracker</ReturnType>
@@ -106,6 +112,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.String</ReturnType>
@@ -126,6 +133,7 @@
       <MemberType>Property</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>OctoprintClient.OctoprintJobTracker</ReturnType>
@@ -142,6 +150,7 @@
       <MemberType>Field</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.Boolean modreq(System.Runtime.CompilerServices.IsVolatile)</ReturnType>
@@ -157,6 +166,7 @@
       <MemberType>Property</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>OctoprintClient.OctoprintPosTracker</ReturnType>
@@ -173,6 +183,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.String</ReturnType>
@@ -195,6 +206,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.String</ReturnType>
@@ -217,6 +229,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.String</ReturnType>
@@ -239,6 +252,7 @@
       <MemberType>Property</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>OctoprintClient.OctoprintPrinterTracker</ReturnType>
@@ -255,6 +269,7 @@
       <MemberType>Field</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.Int32</ReturnType>
@@ -270,6 +285,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.Void</ReturnType>
@@ -286,6 +302,7 @@
       <MemberType>Method</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>System.Void</ReturnType>

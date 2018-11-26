@@ -4,6 +4,7 @@
   <AssemblyInfo>
     <AssemblyName>Printerface</AssemblyName>
     <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+    <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
   </AssemblyInfo>
   <Base>
     <BaseTypeName>System.Object</BaseTypeName>
@@ -20,6 +21,7 @@
       <MemberType>Constructor</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <Parameters>
         <Parameter Name="con" Type="OctoprintClient.OctoprintConnection" />
@@ -36,6 +38,7 @@
       <MemberType>Property</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+        <AssemblyVersion>1.0.6904.22953</AssemblyVersion>
       </AssemblyInfo>
       <ReturnValue>
         <ReturnType>OctoprintClient.OctoprintConnection</ReturnType>

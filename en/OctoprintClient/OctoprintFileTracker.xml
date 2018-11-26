@@ -1,0 +1,227 @@
+<Type Name="OctoprintFileTracker" FullName="OctoprintClient.OctoprintFileTracker">
+  <TypeSignature Language="C#" Value="public class OctoprintFileTracker : OctoprintClient.OctoprintTracker" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit OctoprintFileTracker extends OctoprintClient.OctoprintTracker" />
+  <AssemblyInfo>
+    <AssemblyName>Printerface</AssemblyName>
+    <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>OctoprintClient.OctoprintTracker</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public OctoprintFileTracker (OctoprintClient.OctoprintConnection con);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(class OctoprintClient.OctoprintConnection con) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="con" Type="OctoprintClient.OctoprintConnection" />
+      </Parameters>
+      <Docs>
+        <param name="con">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Copy">
+      <MemberSignature Language="C#" Value="public string Copy (string location, string path, string destination);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string Copy(string location, string path, string destination) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="location" Type="System.String" />
+        <Parameter Name="path" Type="System.String" />
+        <Parameter Name="destination" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="location">To be added.</param>
+        <param name="path">To be added.</param>
+        <param name="destination">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CreateFolder">
+      <MemberSignature Language="C#" Value="public string CreateFolder (string path);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string CreateFolder(string path) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="path" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="path">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Delete">
+      <MemberSignature Language="C#" Value="public string Delete (string location, string path);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string Delete(string location, string path) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="location" Type="System.String" />
+        <Parameter Name="path" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="location">To be added.</param>
+        <param name="path">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetFiles">
+      <MemberSignature Language="C#" Value="public OctoprintClient.OctoprintFolder GetFiles ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class OctoprintClient.OctoprintFolder GetFiles() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>OctoprintClient.OctoprintFolder</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetFiles">
+      <MemberSignature Language="C#" Value="public OctoprintClient.OctoprintFolder GetFiles (string path);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class OctoprintClient.OctoprintFolder GetFiles(string path) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>OctoprintClient.OctoprintFolder</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="path" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="path">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Select">
+      <MemberSignature Language="C#" Value="public string Select (string path, string location = &quot;local&quot;, bool print = false);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string Select(string path, string location, bool print) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="path" Type="System.String" />
+        <Parameter Name="location" Type="System.String" />
+        <Parameter Name="print" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <param name="path">To be added.</param>
+        <param name="location">To be added.</param>
+        <param name="print">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Slice">
+      <MemberSignature Language="C#" Value="public string Slice (string location, string path, bool select = false, string gcode = &quot;&quot;, int posx = 100, int posy = 100, string slicer = &quot;&quot;, string profile = &quot;&quot;, System.Collections.Generic.Dictionary&lt;string,string&gt; profileparam = null, bool print = false);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string Slice(string location, string path, bool select, string gcode, int32 posx, int32 posy, string slicer, string profile, class System.Collections.Generic.Dictionary`2&lt;string, string&gt; profileparam, bool print) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="location" Type="System.String" />
+        <Parameter Name="path" Type="System.String" />
+        <Parameter Name="select" Type="System.Boolean" />
+        <Parameter Name="gcode" Type="System.String" />
+        <Parameter Name="posx" Type="System.Int32" />
+        <Parameter Name="posy" Type="System.Int32" />
+        <Parameter Name="slicer" Type="System.String" />
+        <Parameter Name="profile" Type="System.String" />
+        <Parameter Name="profileparam" Type="System.Collections.Generic.Dictionary&lt;System.String,System.String&gt;" />
+        <Parameter Name="print" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <param name="location">To be added.</param>
+        <param name="path">To be added.</param>
+        <param name="select">To be added.</param>
+        <param name="gcode">To be added.</param>
+        <param name="posx">To be added.</param>
+        <param name="posy">To be added.</param>
+        <param name="slicer">To be added.</param>
+        <param name="profile">To be added.</param>
+        <param name="profileparam">To be added.</param>
+        <param name="print">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="UploadFile">
+      <MemberSignature Language="C#" Value="public string UploadFile (string filename, string onlinepath = &quot;&quot;, string location = &quot;local&quot;, bool select = false, bool print = false);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string UploadFile(string filename, string onlinepath, string location, bool select, bool print) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="filename" Type="System.String" />
+        <Parameter Name="onlinepath" Type="System.String" />
+        <Parameter Name="location" Type="System.String" />
+        <Parameter Name="select" Type="System.Boolean" />
+        <Parameter Name="print" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <param name="filename">To be added.</param>
+        <param name="onlinepath">To be added.</param>
+        <param name="location">To be added.</param>
+        <param name="select">To be added.</param>
+        <param name="print">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

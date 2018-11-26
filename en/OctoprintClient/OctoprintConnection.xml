@@ -1,0 +1,300 @@
+<Type Name="OctoprintConnection" FullName="OctoprintClient.OctoprintConnection">
+  <TypeSignature Language="C#" Value="public class OctoprintConnection" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit OctoprintConnection extends System.Object" />
+  <AssemblyInfo>
+    <AssemblyName>Printerface</AssemblyName>
+    <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public OctoprintConnection (string eP, string aK);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(string eP, string aK) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="eP" Type="System.String" />
+        <Parameter Name="aK" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="eP">To be added.</param>
+        <param name="aK">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ApiKey">
+      <MemberSignature Language="C#" Value="public string ApiKey { get; set; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance string ApiKey" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Delete">
+      <MemberSignature Language="C#" Value="public string Delete (string location);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string Delete(string location) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="location" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="location">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="EndPoint">
+      <MemberSignature Language="C#" Value="public string EndPoint { get; set; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance string EndPoint" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Files">
+      <MemberSignature Language="C#" Value="public OctoprintClient.OctoprintFileTracker Files { get; set; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class OctoprintClient.OctoprintFileTracker Files" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>OctoprintClient.OctoprintFileTracker</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Get">
+      <MemberSignature Language="C#" Value="public string Get (string location);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string Get(string location) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="location" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="location">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Jobs">
+      <MemberSignature Language="C#" Value="public OctoprintClient.OctoprintJobTracker Jobs { get; set; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class OctoprintClient.OctoprintJobTracker Jobs" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>OctoprintClient.OctoprintJobTracker</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="listening">
+      <MemberSignature Language="C#" Value="public Boolean modreq(System.Runtime.CompilerServices.IsVolatile) listening;" />
+      <MemberSignature Language="ILAsm" Value=".field public class System.Boolean modreq(System.Runtime.CompilerServices.IsVolatile) listening" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Boolean modreq(System.Runtime.CompilerServices.IsVolatile)</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Position">
+      <MemberSignature Language="C#" Value="public OctoprintClient.OctoprintPosTracker Position { get; set; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class OctoprintClient.OctoprintPosTracker Position" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>OctoprintClient.OctoprintPosTracker</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="PostJson">
+      <MemberSignature Language="C#" Value="public string PostJson (string location, Newtonsoft.Json.Linq.JObject arguments);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string PostJson(string location, class Newtonsoft.Json.Linq.JObject arguments) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="location" Type="System.String" />
+        <Parameter Name="arguments" Type="Newtonsoft.Json.Linq.JObject" />
+      </Parameters>
+      <Docs>
+        <param name="location">To be added.</param>
+        <param name="arguments">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="PostMultipart">
+      <MemberSignature Language="C#" Value="public string PostMultipart (string packagestring, string location);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string PostMultipart(string packagestring, string location) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="packagestring" Type="System.String" />
+        <Parameter Name="location" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="packagestring">To be added.</param>
+        <param name="location">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="PostString">
+      <MemberSignature Language="C#" Value="public string PostString (string location, string arguments);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string PostString(string location, string arguments) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="location" Type="System.String" />
+        <Parameter Name="arguments" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="location">To be added.</param>
+        <param name="arguments">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Printers">
+      <MemberSignature Language="C#" Value="public OctoprintClient.OctoprintPrinterTracker Printers { get; set; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class OctoprintClient.OctoprintPrinterTracker Printers" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>OctoprintClient.OctoprintPrinterTracker</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="WebSocketBufferSize">
+      <MemberSignature Language="C#" Value="public int WebSocketBufferSize;" />
+      <MemberSignature Language="ILAsm" Value=".field public int32 WebSocketBufferSize" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="WebsocketStart">
+      <MemberSignature Language="C#" Value="public void WebsocketStart ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void WebsocketStart() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="WebsocketStop">
+      <MemberSignature Language="C#" Value="public void WebsocketStop ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void WebsocketStop() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

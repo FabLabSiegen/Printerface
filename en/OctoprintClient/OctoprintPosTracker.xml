@@ -1,0 +1,260 @@
+<Type Name="OctoprintPosTracker" FullName="OctoprintClient.OctoprintPosTracker">
+  <TypeSignature Language="C#" Value="public class OctoprintPosTracker : OctoprintClient.OctoprintTracker" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit OctoprintPosTracker extends OctoprintClient.OctoprintTracker" />
+  <AssemblyInfo>
+    <AssemblyName>Printerface</AssemblyName>
+    <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>OctoprintClient.OctoprintTracker</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public OctoprintPosTracker (OctoprintClient.OctoprintConnection con);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(class OctoprintClient.OctoprintConnection con) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="con" Type="OctoprintClient.OctoprintConnection" />
+      </Parameters>
+      <Docs>
+        <param name="con">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Finalize">
+      <MemberSignature Language="C#" Value="~OctoprintPosTracker ();" />
+      <MemberSignature Language="ILAsm" Value=".method familyhidebysig virtual instance void Finalize() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetCurrentPosSync">
+      <MemberSignature Language="C#" Value="public float[] GetCurrentPosSync ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance float32[] GetCurrentPosSync() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Single[]</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetPosAsync">
+      <MemberSignature Language="C#" Value="public float[] GetPosAsync ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance float32[] GetPosAsync() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Single[]</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Home">
+      <MemberSignature Language="C#" Value="public string Home ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string Home() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Home">
+      <MemberSignature Language="C#" Value="public string Home (string[] axes);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string Home(string[] axes) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="axes" Type="System.String[]" />
+      </Parameters>
+      <Docs>
+        <param name="axes">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IsReady">
+      <MemberSignature Language="C#" Value="public bool IsReady ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance bool IsReady() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Move">
+      <MemberSignature Language="C#" Value="public void Move (Nullable&lt;float&gt; x = null, Nullable&lt;float&gt; y = null, Nullable&lt;float&gt; z = null);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void Move(valuetype System.Nullable`1&lt;float32&gt; x, valuetype System.Nullable`1&lt;float32&gt; y, valuetype System.Nullable`1&lt;float32&gt; z) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="x" Type="System.Nullable&lt;System.Single&gt;" />
+        <Parameter Name="y" Type="System.Nullable&lt;System.Single&gt;" />
+        <Parameter Name="z" Type="System.Nullable&lt;System.Single&gt;" />
+      </Parameters>
+      <Docs>
+        <param name="x">To be added.</param>
+        <param name="y">To be added.</param>
+        <param name="z">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="MoveTo">
+      <MemberSignature Language="C#" Value="public string MoveTo (Nullable&lt;float&gt; x = null, Nullable&lt;float&gt; y = null, Nullable&lt;float&gt; z = null, bool absolute = false, Nullable&lt;int&gt; speed = null);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string MoveTo(valuetype System.Nullable`1&lt;float32&gt; x, valuetype System.Nullable`1&lt;float32&gt; y, valuetype System.Nullable`1&lt;float32&gt; z, bool absolute, valuetype System.Nullable`1&lt;int32&gt; speed) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="x" Type="System.Nullable&lt;System.Single&gt;" />
+        <Parameter Name="y" Type="System.Nullable&lt;System.Single&gt;" />
+        <Parameter Name="z" Type="System.Nullable&lt;System.Single&gt;" />
+        <Parameter Name="absolute" Type="System.Boolean" />
+        <Parameter Name="speed" Type="System.Nullable&lt;System.Int32&gt;" />
+      </Parameters>
+      <Docs>
+        <param name="x">To be added.</param>
+        <param name="y">To be added.</param>
+        <param name="z">To be added.</param>
+        <param name="absolute">To be added.</param>
+        <param name="speed">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SetPos">
+      <MemberSignature Language="C#" Value="public void SetPos (Nullable&lt;float&gt; x = null, Nullable&lt;float&gt; y = null, Nullable&lt;float&gt; z = null);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void SetPos(valuetype System.Nullable`1&lt;float32&gt; x, valuetype System.Nullable`1&lt;float32&gt; y, valuetype System.Nullable`1&lt;float32&gt; z) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="x" Type="System.Nullable&lt;System.Single&gt;" />
+        <Parameter Name="y" Type="System.Nullable&lt;System.Single&gt;" />
+        <Parameter Name="z" Type="System.Nullable&lt;System.Single&gt;" />
+      </Parameters>
+      <Docs>
+        <param name="x">To be added.</param>
+        <param name="y">To be added.</param>
+        <param name="z">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="StartThread">
+      <MemberSignature Language="C#" Value="public void StartThread ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void StartThread() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="StopThread">
+      <MemberSignature Language="C#" Value="public void StopThread ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void StopThread() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Syncpos">
+      <MemberSignature Language="C#" Value="public void Syncpos ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void Syncpos() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

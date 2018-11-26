@@ -1,0 +1,272 @@
+<Type Name="OctoprintJobTracker" FullName="OctoprintClient.OctoprintJobTracker">
+  <TypeSignature Language="C#" Value="public class OctoprintJobTracker : OctoprintClient.OctoprintTracker" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit OctoprintJobTracker extends OctoprintClient.OctoprintTracker" />
+  <AssemblyInfo>
+    <AssemblyName>Printerface</AssemblyName>
+    <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>OctoprintClient.OctoprintTracker</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public OctoprintJobTracker (OctoprintClient.OctoprintConnection con);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(class OctoprintClient.OctoprintConnection con) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="con" Type="OctoprintClient.OctoprintConnection" />
+      </Parameters>
+      <Docs>
+        <param name="con">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CallJob">
+      <MemberSignature Language="C#" Value="public void CallJob (OctoprintClient.OctoprintJobInfo i);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void CallJob(class OctoprintClient.OctoprintJobInfo i) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="i" Type="OctoprintClient.OctoprintJobInfo" />
+      </Parameters>
+      <Docs>
+        <param name="i">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CallProgress">
+      <MemberSignature Language="C#" Value="public void CallProgress (OctoprintClient.OctoprintJobProgress p);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void CallProgress(class OctoprintClient.OctoprintJobProgress p) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="p" Type="OctoprintClient.OctoprintJobProgress" />
+      </Parameters>
+      <Docs>
+        <param name="p">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CancelJob">
+      <MemberSignature Language="C#" Value="public string CancelJob ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string CancelJob() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetInfo">
+      <MemberSignature Language="C#" Value="public OctoprintClient.OctoprintJobInfo GetInfo ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class OctoprintClient.OctoprintJobInfo GetInfo() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>OctoprintClient.OctoprintJobInfo</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetProgress">
+      <MemberSignature Language="C#" Value="public OctoprintClient.OctoprintJobProgress GetProgress ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class OctoprintClient.OctoprintJobProgress GetProgress() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>OctoprintClient.OctoprintJobProgress</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="JobinfoHandlers">
+      <MemberSignature Language="C#" Value="public event Action&lt;OctoprintClient.OctoprintJobInfo&gt; JobinfoHandlers;" />
+      <MemberSignature Language="ILAsm" Value=".event class System.Action`1&lt;class OctoprintClient.OctoprintJobInfo&gt; JobinfoHandlers" />
+      <MemberType>Event</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Action&lt;OctoprintClient.OctoprintJobInfo&gt;</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="JobListens">
+      <MemberSignature Language="C#" Value="public bool JobListens ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance bool JobListens() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="PauseJob">
+      <MemberSignature Language="C#" Value="public string PauseJob ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string PauseJob() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ProgressinfoHandlers">
+      <MemberSignature Language="C#" Value="public event Action&lt;OctoprintClient.OctoprintJobProgress&gt; ProgressinfoHandlers;" />
+      <MemberSignature Language="ILAsm" Value=".event class System.Action`1&lt;class OctoprintClient.OctoprintJobProgress&gt; ProgressinfoHandlers" />
+      <MemberType>Event</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Action&lt;OctoprintClient.OctoprintJobProgress&gt;</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ProgressListens">
+      <MemberSignature Language="C#" Value="public bool ProgressListens ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance bool ProgressListens() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="RestartJob">
+      <MemberSignature Language="C#" Value="public string RestartJob ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string RestartJob() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ResumeJob">
+      <MemberSignature Language="C#" Value="public string ResumeJob ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string ResumeJob() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="StartJob">
+      <MemberSignature Language="C#" Value="public string StartJob ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string StartJob() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ToggleJob">
+      <MemberSignature Language="C#" Value="public string ToggleJob ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string ToggleJob() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

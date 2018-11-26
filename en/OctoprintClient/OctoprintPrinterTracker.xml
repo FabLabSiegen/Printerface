@@ -1,0 +1,473 @@
+<Type Name="OctoprintPrinterTracker" FullName="OctoprintClient.OctoprintPrinterTracker">
+  <TypeSignature Language="C#" Value="public class OctoprintPrinterTracker : OctoprintClient.OctoprintTracker" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit OctoprintPrinterTracker extends OctoprintClient.OctoprintTracker" />
+  <AssemblyInfo>
+    <AssemblyName>Printerface</AssemblyName>
+    <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>OctoprintClient.OctoprintTracker</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public OctoprintPrinterTracker (OctoprintClient.OctoprintConnection con);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(class OctoprintClient.OctoprintConnection con) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="con" Type="OctoprintClient.OctoprintConnection" />
+      </Parameters>
+      <Docs>
+        <param name="con">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="BestBeforeMilisecs">
+      <MemberSignature Language="C#" Value="public int BestBeforeMilisecs;" />
+      <MemberSignature Language="ILAsm" Value=".field public int32 BestBeforeMilisecs" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CallCurrentZ">
+      <MemberSignature Language="C#" Value="public void CallCurrentZ (float z);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void CallCurrentZ(float32 z) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="z" Type="System.Single" />
+      </Parameters>
+      <Docs>
+        <param name="z">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CallPrinterState">
+      <MemberSignature Language="C#" Value="public void CallPrinterState (OctoprintClient.OctoprintPrinterState ps);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void CallPrinterState(class OctoprintClient.OctoprintPrinterState ps) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="ps" Type="OctoprintClient.OctoprintPrinterState" />
+      </Parameters>
+      <Docs>
+        <param name="ps">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CurrentZHandlers">
+      <MemberSignature Language="C#" Value="public event Action&lt;float&gt; CurrentZHandlers;" />
+      <MemberSignature Language="ILAsm" Value=".event class System.Action`1&lt;float32&gt; CurrentZHandlers" />
+      <MemberType>Event</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Action&lt;System.Single&gt;</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ExtrudeSelectedTool">
+      <MemberSignature Language="C#" Value="public string ExtrudeSelectedTool (int mm);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string ExtrudeSelectedTool(int32 mm) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="mm" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <param name="mm">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetFullPrinterState">
+      <MemberSignature Language="C#" Value="public OctoprintClient.OctoprintFullPrinterState GetFullPrinterState ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class OctoprintClient.OctoprintFullPrinterState GetFullPrinterState() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>OctoprintClient.OctoprintFullPrinterState</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetPrinterState">
+      <MemberSignature Language="C#" Value="public OctoprintClient.OctoprintPrinterState GetPrinterState ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class OctoprintClient.OctoprintPrinterState GetPrinterState() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>OctoprintClient.OctoprintPrinterState</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="MakePrintheadHome">
+      <MemberSignature Language="C#" Value="public string MakePrintheadHome (string[] axes);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string MakePrintheadHome(string[] axes) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="axes" Type="System.String[]" />
+      </Parameters>
+      <Docs>
+        <param name="axes">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="MakePrintheadJog">
+      <MemberSignature Language="C#" Value="public string MakePrintheadJog (Nullable&lt;float&gt; x, Nullable&lt;float&gt; y, Nullable&lt;float&gt; z, bool absolute, Nullable&lt;int&gt; speed);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string MakePrintheadJog(valuetype System.Nullable`1&lt;float32&gt; x, valuetype System.Nullable`1&lt;float32&gt; y, valuetype System.Nullable`1&lt;float32&gt; z, bool absolute, valuetype System.Nullable`1&lt;int32&gt; speed) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="x" Type="System.Nullable&lt;System.Single&gt;" />
+        <Parameter Name="y" Type="System.Nullable&lt;System.Single&gt;" />
+        <Parameter Name="z" Type="System.Nullable&lt;System.Single&gt;" />
+        <Parameter Name="absolute" Type="System.Boolean" />
+        <Parameter Name="speed" Type="System.Nullable&lt;System.Int32&gt;" />
+      </Parameters>
+      <Docs>
+        <param name="x">To be added.</param>
+        <param name="y">To be added.</param>
+        <param name="z">To be added.</param>
+        <param name="absolute">To be added.</param>
+        <param name="speed">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="PrinterstateHandlers">
+      <MemberSignature Language="C#" Value="public event Action&lt;OctoprintClient.OctoprintPrinterState&gt; PrinterstateHandlers;" />
+      <MemberSignature Language="ILAsm" Value=".event class System.Action`1&lt;class OctoprintClient.OctoprintPrinterState&gt; PrinterstateHandlers" />
+      <MemberType>Event</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Action&lt;OctoprintClient.OctoprintPrinterState&gt;</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SelectTool">
+      <MemberSignature Language="C#" Value="public string SelectTool (string tool);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string SelectTool(string tool) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="tool" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="tool">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SetFeedrate">
+      <MemberSignature Language="C#" Value="public string SetFeedrate (int feed);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string SetFeedrate(int32 feed) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="feed" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <param name="feed">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SetFeedrate">
+      <MemberSignature Language="C#" Value="public string SetFeedrate (float feed);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string SetFeedrate(float32 feed) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="feed" Type="System.Single" />
+      </Parameters>
+      <Docs>
+        <param name="feed">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SetFlowrateSelectedTool">
+      <MemberSignature Language="C#" Value="public string SetFlowrateSelectedTool (int flow);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string SetFlowrateSelectedTool(int32 flow) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="flow" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <param name="flow">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SetFlowrateSelectedTool">
+      <MemberSignature Language="C#" Value="public string SetFlowrateSelectedTool (float flow);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string SetFlowrateSelectedTool(float32 flow) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="flow" Type="System.Single" />
+      </Parameters>
+      <Docs>
+        <param name="flow">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SetTemperatureOffset">
+      <MemberSignature Language="C#" Value="public string SetTemperatureOffset (System.Collections.Generic.Dictionary&lt;string,int&gt; offsets);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string SetTemperatureOffset(class System.Collections.Generic.Dictionary`2&lt;string, int32&gt; offsets) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="offsets" Type="System.Collections.Generic.Dictionary&lt;System.String,System.Int32&gt;" />
+      </Parameters>
+      <Docs>
+        <param name="offsets">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SetTemperatureOffset">
+      <MemberSignature Language="C#" Value="public string SetTemperatureOffset (int temp);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string SetTemperatureOffset(int32 temp) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="temp" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <param name="temp">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SetTemperatureOffsetBed">
+      <MemberSignature Language="C#" Value="public string SetTemperatureOffsetBed (int offset);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string SetTemperatureOffsetBed(int32 offset) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="offset" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <param name="offset">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SetTemperatureTarget">
+      <MemberSignature Language="C#" Value="public string SetTemperatureTarget (System.Collections.Generic.Dictionary&lt;string,int&gt; targets);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string SetTemperatureTarget(class System.Collections.Generic.Dictionary`2&lt;string, int32&gt; targets) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="targets" Type="System.Collections.Generic.Dictionary&lt;System.String,System.Int32&gt;" />
+      </Parameters>
+      <Docs>
+        <param name="targets">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SetTemperatureTarget">
+      <MemberSignature Language="C#" Value="public string SetTemperatureTarget (int temp);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string SetTemperatureTarget(int32 temp) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="temp" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <param name="temp">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SetTemperatureTargetBed">
+      <MemberSignature Language="C#" Value="public string SetTemperatureTargetBed (int temperature);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance string SetTemperatureTargetBed(int32 temperature) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="temperature" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <param name="temperature">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="StateListens">
+      <MemberSignature Language="C#" Value="public bool StateListens ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance bool StateListens() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ZListens">
+      <MemberSignature Language="C#" Value="public bool ZListens ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance bool ZListens() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.6904.21521</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

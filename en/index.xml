@@ -1,0 +1,65 @@
+<Overview>
+  <Assemblies>
+    <Assembly Name="Printerface" Version="1.0.6904.21521">
+      <Attributes>
+        <Attribute>
+          <AttributeName>System.Diagnostics.Debuggable(System.Diagnostics.DebuggableAttribute+DebuggingModes.IgnoreSymbolStoreSequencePoints)</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyCompany("")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyConfiguration("")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyCopyright("${AuthorCopyright}")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyDescription("")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyProduct("")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyTitle("Printerface")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyTrademark("")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Runtime.CompilerServices.CompilationRelaxations(8)</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Runtime.CompilerServices.RuntimeCompatibility(WrapNonExceptionThrows=true)</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.5", FrameworkDisplayName=".NET Framework 4.5")</AttributeName>
+        </Attribute>
+      </Attributes>
+    </Assembly>
+  </Assemblies>
+  <Remarks>To be added.</Remarks>
+  <Copyright>To be added.</Copyright>
+  <Types>
+    <Namespace Name="OctoprintClient">
+      <Type Name="OctoprintConnection" Kind="Class" />
+      <Type Name="OctoprintFilamentInfo" Kind="Class" />
+      <Type Name="OctoprintFile" Kind="Class" />
+      <Type Name="OctoprintFileTracker" Kind="Class" />
+      <Type Name="OctoprintFolder" Kind="Class" />
+      <Type Name="OctoprintFullPrinterState" Kind="Class" />
+      <Type Name="OctoprintHistoricTemperatureState" Kind="Class" />
+      <Type Name="OctoprintJobInfo" Kind="Class" />
+      <Type Name="OctoprintJobProgress" Kind="Class" />
+      <Type Name="OctoprintJobTracker" Kind="Class" />
+      <Type Name="OctoprintPosTracker" Kind="Class" />
+      <Type Name="OctoprintPrinterFlags" Kind="Class" />
+      <Type Name="OctoprintPrinterState" Kind="Class" />
+      <Type Name="OctoprintPrinterTracker" Kind="Class" />
+      <Type Name="OctoprintTemperature" Kind="Class" />
+      <Type Name="OctoprintTemperatureState" Kind="Class" />
+      <Type Name="OctoprintTracker" Kind="Class" />
+    </Namespace>
+  </Types>
+  <Title>Printerface</Title>
+</Overview>

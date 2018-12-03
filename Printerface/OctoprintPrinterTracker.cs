@@ -47,6 +47,33 @@ namespace OctoprintClient
         }
 
         /// <summary>
+        /// Action for Eventhandling the Websocket Temperature offset info
+        /// </summary>
+        public event Action<List<int>> OffsetHandlers;
+        public bool OffsetListens()
+        {
+            return OffsetHandlers != null;
+        }
+        public void CallOffset(List<int> LI)
+        {
+            OffsetHandlers.Invoke(LI);
+        }
+
+
+        /// <summary>
+        /// Action for Eventhandling the Websocket Temperature info
+        /// </summary>
+        public event Action<List<OctoprintHistoricTemperatureState>> TempHandlers;
+        public bool TempsListens()
+        {
+            return TempHandlers!=null;
+        }
+        public void CallTemp(List<OctoprintHistoricTemperatureState> LHT)
+        {
+            TempHandlers.Invoke(LHT);
+        }
+
+        /// <summary>
         /// Action for Eventhandling the Websocket CurrentZ info
         /// </summary>
         public event Action<float> CurrentZHandlers;
@@ -87,95 +114,7 @@ namespace OctoprintClient
             }
             JObject data=new JObject();
             data = JsonConvert.DeserializeObject<JObject>(jobInfo);
-            JToken temperaturedata = data.Value<JToken>("temperature");
-            JToken bedtemperature = temperaturedata.Value<JToken>("bed");
-            JToken statedata = data.Value<JToken>("state");
-            JToken stateflags = statedata.Value<JToken>("flags");
-            OctoprintFullPrinterState result = new OctoprintFullPrinterState()
-            {
-                TempState = new OctoprintTemperatureState()
-                {
-                    Bed = new OctoprintTemperature()
-                    {
-                        Actual = bedtemperature.Value<double?>("actual") ?? -1.0,
-                        Target = bedtemperature.Value<double?>("target") ?? -1.0,
-                        Offset = bedtemperature.Value<double?>("offset") ?? -1.0
-
-                    }
-                },
-                SDState = data.Value<JToken>("sd").Value<bool?>("ready") ?? false,
-                PrinterState = new OctoprintPrinterState()
-                {
-                    Text = statedata.Value<String>("text"),
-                    Flags = new OctoprintPrinterFlags()
-                    {
-                        Operational = stateflags.Value<bool?>("operational")??false,
-                        Paused = stateflags.Value<bool?>("paused") ?? false,
-                        Printing = stateflags.Value<bool?>("printing") ?? false,
-                        Cancelling = stateflags.Value<bool?>("canceling") ?? false,
-                        SDReady = stateflags.Value<bool?>("sdReady") ?? false,
-                        Error = stateflags.Value<bool?>("error") ?? false,
-                        Ready = stateflags.Value<bool?>("ready") ?? false,
-                        ClosedOrError = stateflags.Value<bool?>("closedOrError") ?? false
-                    }
-                }
-            };
-            result.TempState.Tools = new List<OctoprintTemperature>();
-            for (int i = 0; i < 256; i++)
-            {
-                JToken tooltemp = temperaturedata.Value<JToken>("tool"+i);
-                if (tooltemp != null)
-                {
-                    result.TempState.Tools.Add(new OctoprintTemperature()
-                    {
-                        Actual = tooltemp.Value<double?>("actual")??-1.0,
-                        Target = tooltemp.Value<double?>("target") ?? -1.0,
-                        Offset = tooltemp.Value<double?>("offset") ?? -1.0
-                    });
-                }
-                else
-                {
-                    break;
-                }
-            }
-            if (temperaturedata != null && temperaturedata.Value<JToken>("history")!=null)
-            {
-                result.TempState.History = new List<OctoprintHistoricTemperatureState>();
-                foreach (JObject historydata in temperaturedata["history"])
-                {
-
-                    OctoprintHistoricTemperatureState historicTempState = new OctoprintHistoricTemperatureState()
-                    {
-                        Time = historydata.Value<int?>("time") ?? -1,
-                        Bed = new OctoprintTemperature()
-                        {
-                            Actual = historydata.Value<JToken>("bed").Value<double?>("actual") ?? -1.0,
-                            Target = historydata.Value<JToken>("bed").Value<double?>("target") ?? -1.0,
-                            Offset = historydata.Value<JToken>("bed").Value<double?>("offset") ?? -1.0
-                        }
-                    };
-
-                    historicTempState.Tools = new List<OctoprintTemperature>();
-                    for (int i = 0; i < 256; i++)
-                    {
-                        JToken tooltemp = historydata.Value<JToken>("tool" + i);
-                        if (tooltemp != null)
-                        {
-                            historicTempState.Tools.Add(new OctoprintTemperature()
-                            {
-                                Actual = tooltemp.Value<double?>("actual") ?? -1.0,
-                                Target = tooltemp.Value<double?>("target") ?? -1.0,
-                                Offset = tooltemp.Value<double?>("offset") ?? -1.0
-                            });
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    result.TempState.History.Add(historicTempState);
-                }
-            }
+            OctoprintFullPrinterState result = new OctoprintFullPrinterState(data);
             currentstate = result;
             lastupdated = DateTime.Now;
             return result;
@@ -206,22 +145,7 @@ namespace OctoprintClient
             JObject data = new JObject();
             data = JsonConvert.DeserializeObject<JObject>(jobInfo);
             JToken statedata = data.Value<JToken>("state");
-            JToken stateflags = statedata.Value<JToken>("flags");
-            OctoprintPrinterState result = new OctoprintPrinterState()
-            {
-                Text = statedata.Value<String>("text"),
-                Flags = new OctoprintPrinterFlags()
-                {
-                    Operational = stateflags.Value<bool?>("operational") ?? false,
-                    Paused = stateflags.Value<bool?>("paused") ?? false,
-                    Printing = stateflags.Value<bool?>("printing") ?? false,
-                    Cancelling = stateflags.Value<bool?>("canceling") ?? false,
-                    SDReady = stateflags.Value<bool?>("sdReady") ?? false,
-                    Error = stateflags.Value<bool?>("error") ?? false,
-                    Ready = stateflags.Value<bool?>("ready") ?? false,
-                    ClosedOrError = stateflags.Value<bool?>("closedOrError") ?? false
-                }
-            };
+            OctoprintPrinterState result = new OctoprintPrinterState(statedata);
             if (currentstate != null)
                 currentstate.PrinterState = result;
             return result;
@@ -535,6 +459,7 @@ namespace OctoprintClient
             }
         }
 
+
         /// <summary>
         /// Sets the flowrate of the selected tool.
         /// </summary>
@@ -662,6 +587,18 @@ namespace OctoprintClient
 
     public class OctoprintPrinterFlags
     {
+        public OctoprintPrinterFlags(JToken stateflags)
+        {
+            Operational = stateflags.Value<bool?>("operational") ?? false;
+            Paused = stateflags.Value<bool?>("paused") ?? false;
+            Printing = stateflags.Value<bool?>("printing") ?? false;
+            Cancelling = stateflags.Value<bool?>("canceling") ?? false;
+            SDReady = stateflags.Value<bool?>("sdReady") ?? false;
+            Error = stateflags.Value<bool?>("error") ?? false;
+            Ready = stateflags.Value<bool?>("ready") ?? false;
+            ClosedOrError = stateflags.Value<bool?>("closedOrError") ?? false;
+        }
+
         public bool Operational { get; set; }
         public bool Paused { get; set; }
         public bool Printing { get; set; }
@@ -689,6 +626,14 @@ namespace OctoprintClient
     }
     public class OctoprintTemperature
     {
+        public OctoprintTemperature(JToken temperature)
+        {
+
+            Actual = temperature.Value<double?>("actual") ?? -1.0;
+            Target = temperature.Value<double?>("target") ?? -1.0;
+            Offset = temperature.Value<double?>("offset") ?? -1.0;
+        }
+
         public double Actual { get; set; }
         public double Target { get; set; }
         public double Offset { get; set; }
@@ -722,6 +667,24 @@ namespace OctoprintClient
     }
     public class OctoprintHistoricTemperatureState
     {
+        public OctoprintHistoricTemperatureState(JToken jToken)
+        {
+            Time = jToken.Value<int?>("time") ?? -1;
+            Bed = new OctoprintTemperature(jToken.Value<JToken>("bed"));
+            Tools = new List<OctoprintTemperature>();
+            for (int i = 0; i < 256; i++)
+            {
+                JToken tooltemp = jToken.Value<JToken>("tool" + i);
+                if (tooltemp != null)
+                {
+                    Tools.Add(new OctoprintTemperature(tooltemp));
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
         public int Time { get; set; }
         public List<OctoprintTemperature> Tools { get; set; }
         public OctoprintTemperature Bed { get; set; }
@@ -738,7 +701,19 @@ namespace OctoprintClient
         }
     }
     public class OctoprintPrinterState
-    { 
+    {
+        public OctoprintPrinterState()
+        {
+
+        }
+        public OctoprintPrinterState(JToken statedata)
+        {
+
+            JToken stateflags = statedata.Value<JToken>("flags");
+            Text = statedata.Value<String>("text");
+            Flags = new OctoprintPrinterFlags(stateflags);
+        }
+
         public string Text { get; set; }
         public OctoprintPrinterFlags Flags { get; set; }
         public override string ToString()
@@ -751,6 +726,47 @@ namespace OctoprintClient
     }
     public class OctoprintFullPrinterState
     {
+        public OctoprintFullPrinterState()
+        {
+
+        }
+        public OctoprintFullPrinterState(JObject data)
+        {
+
+            JToken temperaturedata = data.Value<JToken>("temperature");
+            JToken bedtemperature = temperaturedata.Value<JToken>("bed");
+            JToken statedata = data.Value<JToken>("state");
+            TempState = new OctoprintTemperatureState()
+            {
+                Bed = new OctoprintTemperature(bedtemperature)
+            };
+            SDState = data.Value<JToken>("sd").Value<bool?>("ready") ?? false;
+            PrinterState = new OctoprintPrinterState(statedata);
+            TempState.Tools = new List<OctoprintTemperature>();
+            for (int i = 0; i < 256; i++)
+            {
+                JToken tooltemp = temperaturedata.Value<JToken>("tool"+i);
+                if (tooltemp != null)
+                {
+                    TempState.Tools.Add(new OctoprintTemperature(tooltemp));
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if (temperaturedata != null && temperaturedata.Value<JToken>("history")!=null)
+            {
+                TempState.History = new List<OctoprintHistoricTemperatureState>();
+                foreach (JObject historydata in temperaturedata["history"])
+                {
+
+                    OctoprintHistoricTemperatureState historicTempState = new OctoprintHistoricTemperatureState(historydata);
+                    TempState.History.Add(historicTempState);
+                }
+            }
+        }
+
         public OctoprintTemperatureState TempState { get; set; }
         public bool SDState { get; set; }
         public OctoprintPrinterState PrinterState { get; set; }

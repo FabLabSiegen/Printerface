@@ -29,7 +29,7 @@ namespace OctoprintClient
         }
         public void CallJob(OctoprintJobInfo i)
         {
-            JobinfoHandlers(i);
+            JobinfoHandlers.Invoke(i);
         }
 
         /// <summary>
@@ -51,26 +51,11 @@ namespace OctoprintClient
         /// <returns>The info.</returns>
         public OctoprintJobInfo GetInfo()
         {
-            OctoprintJobInfo result = new OctoprintJobInfo();
+            //OctoprintJobInfo result = new OctoprintJobInfo();
             string jobInfo = Connection.Get("api/job");
             JObject data = JsonConvert.DeserializeObject<JObject>(jobInfo);
             JToken job = data.Value<JToken>("job");
-            result.EstimatedPrintTime = job.Value<int?>("estimatedPrintTime") ?? -1;
-            JToken filament = job.Value<JToken>("filament");
-            if(filament.HasValues)
-            result.Filament = new OctoprintFilamentInfo
-            {
-                Lenght = filament.Value<int?>("length") ?? -1,
-                Volume = filament.Value<int?>("volume") ?? -1
-            };
-            JToken file = job.Value<JToken>("file");
-            result.File = new OctoprintFile
-            {
-                Name = file.Value<String>("name") ?? "",
-                Origin = file.Value<String>("origin") ?? "",
-                Size = file.Value<int?>("size") ?? -1,
-                Date = file.Value<int?>("date") ?? -1
-            };
+            OctoprintJobInfo result = new OctoprintJobInfo(job);
             return result;
         }
 
@@ -82,12 +67,8 @@ namespace OctoprintClient
         {
             string jobInfo = Connection.Get("api/job");
             JObject data = JsonConvert.DeserializeObject<JObject>(jobInfo);
-            OctoprintJobProgress result = new OctoprintJobProgress();
             JToken progress = data.Value<JToken>("progress");
-            result.Completion = progress.Value<double?>("completion") ?? -1.0;
-            result.Filepos = progress.Value<int?>("filepos") ?? -1;
-            result.PrintTime = progress.Value<int?>("printTime") ?? -1;
-            result.PrintTimeLeft = progress.Value<int?>("printTimeLeft")??-1;
+            OctoprintJobProgress result = new OctoprintJobProgress(progress);
             return result;
         }
 
@@ -186,15 +167,46 @@ namespace OctoprintClient
     {
         public int Lenght { get; set; }
         public double Volume { get; set; }
+        public override string ToString()
+        {
+            return "Length: " + Lenght + "\nVolume: "+Volume;
+        }
     }
     public class OctoprintJobInfo
     {
+
+        public OctoprintJobInfo(JToken job)
+        {
+            EstimatedPrintTime = job.Value<int?>("estimatedPrintTime") ?? -1;
+            JToken filament = job.Value<JToken>("filament");
+            if (filament.HasValues)
+                Filament = new OctoprintFilamentInfo
+                {
+                    Lenght = filament.Value<int?>("length") ?? -1,
+                    Volume = filament.Value<int?>("volume") ?? -1
+                };
+            JToken file = job.Value<JToken>("file");
+            File = new OctoprintFile((JObject)file);
+        }
+
         public OctoprintFile File { get; set; }
         public int EstimatedPrintTime { get; set; }
         public OctoprintFilamentInfo Filament { get; set; }
+        public override string ToString()
+        {
+            return "EstimatedPrinttime: " + EstimatedPrintTime + "\nAt File: " + File + "\nUsing Fillament: \n" + Filament;
+        }
     }
     public class OctoprintJobProgress
     {
+        public OctoprintJobProgress(JToken progress)
+        {
+            Completion = progress.Value<double?>("completion") ?? -1.0;
+            Filepos = progress.Value<int?>("filepos") ?? -1;
+            PrintTime = progress.Value<int?>("printTime") ?? -1;
+            PrintTimeLeft = progress.Value<int?>("printTimeLeft")??-1;
+        }
+
         public Double Completion { get; set; }
         public int Filepos { get; set; }
         public int PrintTime { get; set; }
